@@ -1,0 +1,12 @@
+[submodule "vendor/socket.io-node"]
+	path = vendor/socket.io-node
+	url = git@github.com:jcoleman/Socket.IO-node.git
+[submodule "vendor/socket.io"]
+	path = vendor/socket.io
+	url = git@github.com:jcoleman/Socket.IO.git
+[submodule "vendor/mongoose"]
+	path = vendor/mongoose
+	url = git://github.com/LearnBoost/mongoose.git
+[submodule "vendor/prototype"]
+	path = vendor/prototype
+	url = http://github.com/sstephenson/prototype.git
