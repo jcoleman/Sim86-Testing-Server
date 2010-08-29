@@ -1,25 +1,46 @@
 this.ExecutionRecord = {
   
   properties: [
-    'user',
-    'module',
+    'attemptId',
     'count',
     {
       instruction: [
         'addressingMode',
-        'address',
+        'segment',
+        'offset',
         'mnemonic',
-        'operands',
-        'raw'
+        {
+          operands: [
+            ['type', 'string']
+          ]
+        },
+        {
+          rawBytes: []
+        }
       ]
     },
     {
-      registers: []
+      registers: [
+        'ax',
+        'bx',
+        'cx',
+        'dx',
+        'di',
+        'si',
+        'cs',
+        'ds',
+        'es',
+        'ss',
+        'bp',
+        'sp',
+        'ip',
+        'flags'
+      ]
     },
     {
       memory: [
         {
-          changed: []
+          changed: [['address', 'value']]
         },
         'checksum'
       ]
@@ -27,7 +48,7 @@ this.ExecutionRecord = {
   ],
   
   indexes: [
-    { user: 1, module: 1, count: 1 }
+    { executionAttemptId: 1, count: 1 }
   ],
   
   methods: {

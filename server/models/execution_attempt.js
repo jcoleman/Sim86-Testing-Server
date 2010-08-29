@@ -2,7 +2,7 @@ this.ExecutionAttempt = {
   
   properties: [
     'user',
-    'executionModule',
+    'executionModuleId',
     'completed',
     'createdAt',
     'recordCount',
@@ -11,7 +11,7 @@ this.ExecutionAttempt = {
   ],
   
   indexes: [
-    'user'
+    { user: 1, executionModuleId: 1 }
   ],
   
   methods: {
