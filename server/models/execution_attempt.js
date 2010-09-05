@@ -1,7 +1,7 @@
 this.ExecutionAttempt = {
   
   properties: [
-    'user',
+    'userId',
     'executionModuleId',
     'completed',
     'createdAt',
