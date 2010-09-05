@@ -3,14 +3,13 @@ var self = this;
 var controllers = {};
 
 this.initialize = function(includes) {
-  ['Application', 'Home', 'ExecutionAttempt', 'ExecutionRecord'].each(function(name) {
+  ['Application', 'Home', 'ExecutionAttempt', 'ExecutionRecord', 'User'].each(function(name) {
     name += "Controller";
     var module = require('./' + name.underscore());
     var Class = includes.Prototype.Class;
     var baseKlass = controllers[module.base];
     var extensions = module.extensions
-                           .concat( [ module.klass,
-                                      { Models: includes.Models} ] )
+                           .concat( [ module.klass, includes ] )
     var controller = Class.create
                           .curry(baseKlass || {})
                           .apply(Class, extensions);
@@ -46,6 +45,23 @@ var routes = {
         collectBody: true
       }
     }
+  },
+  'user': {
+    'new': function(request, additionalParameters) {
+      var route = {
+        controller: 'user',
+        action: 'new',
+        options: {},
+        additionalParameters: additionalParameters
+      };
+      if (request.method == 'POST' || request.method == 'PUT') {
+        route.options = {
+          parsePOST: true,
+          collectBody: true
+        };
+      }
+      return route;
+    }
   }
 };
 
@@ -60,7 +76,7 @@ var findMatchingRoute = function(options) {
     route = route[chunk];
     
     if (Object.isFunction(route)) {
-      var route = route(additionalParameters);
+      var route = route(options.request, additionalParameters);
     } else if (route !== undefined) {
       // Do nothing - a new route object was found
     } else {
