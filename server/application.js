@@ -1,9 +1,40 @@
+var Prototype = require('./lib/prototype');
+
+var environmentConfiguration = {
+  dev: {
+    templating: {
+      cacheOnCompile: false
+    }
+  },
+  prod: {
+    templating: {
+      cacheOnCompile: true
+    }
+  }
+}
+
+ENVIRONMENT_CONFIG = environmentConfiguration[(process.argv[2] || 'dev')];
+
+if (!ENVIRONMENT_CONFIG) {
+  throw new Error("Invalid evironment option");
+}
+
 var HTTP = require('http'),
     URL = require('url'),
     SocketIO = require('../vendor/socket.io-node/'),
-    Prototype = require('./lib/prototype'),
     Models = require('./models/index'),
-    Controllers = require('./controllers/index').initialize({Models: Models, Prototype: Prototype});
+    FS = require('fs'),
+    EJS = require('../vendor/visionmedia-ejs/index'),
+    SHA1 = require('./lib/sha1'),
+    QueryString = require('querystring'),
+    Controllers = require('./controllers/index').initialize({
+      Models: Models,
+      Prototype: Prototype,
+      FS: FS,
+      EJS: EJS,
+      SHA1: SHA1,
+      QueryString: QueryString
+    });
 
 var server = HTTP.createServer(function(request, response) {
   var parsedUrl = URL.parse(request.url, true);
@@ -16,7 +47,7 @@ var server = HTTP.createServer(function(request, response) {
 });
 
 
-server.listen(8080);
+server.listen(3000);
 
 var webSocket = SocketIO.listen(server);
 
