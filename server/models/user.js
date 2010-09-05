@@ -1,11 +1,12 @@
 this.User = {
   
   properties: [
-    'username'
+    'username',
+    'token'
   ],
   
   indexes: [
-    'username'
+    [{'username': 1}, {unique: true}]
   ],
   
   methods: {
