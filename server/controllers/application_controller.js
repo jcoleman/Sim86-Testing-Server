@@ -1,3 +1,5 @@
+var compiledTemplates = {};
+
 this.base = null;
 
 this.extensions = [];
@@ -11,8 +13,12 @@ this.klass = {
     this.response = options.response;
     this.options = options;
     
-    if (routeOptions && routeOptions.parseJSON) {
-      this.request.json = JSON.parse(this.request.completeBody);
+    if (routeOptions) {
+      if (routeOptions.parseJSON) {
+        this.request.json = JSON.parse(this.request.completeBody);
+      } else if (routeOptions.parsePOST) {
+        this.request.post = this.QueryString.parse(this.request.completeBody);
+      }
     }
   },
   
@@ -48,8 +54,38 @@ this.klass = {
       this.response.write(options.text);
     } else if (options.json !== undefined) {
       this.response.write(Object.toJSON(options.json));
+    } else if (options.template !== undefined) {
+      //var renderer = this.loadTemplateRenderFunction(options.template);
+      console.log(this.FS.realpathSync('./'));
+      var templateFile = './templates/' + options.template + '.ejs';
+      var content = this.EJS.render(this.loadTemplateFile(templateFile), {context: this, locals: (options.locals || {})});
+      this.response.write(content);
     }
   },
+  
+  loadTemplateFile: function(path) {
+    return this.FS.readFileSync(path, 'utf8');
+  },
+  
+  /*
+  compiledTemplateCache: {},
+  
+  loadTemplateRenderFunction: function(path) {
+    var cached = this.compiledTemplateCache[path]
+    if (cached) {
+      return cached;
+    } else {
+      var data = this.FS.readFileSync(path, 'utf8');
+      var template = this.EJS.compile(data);
+      
+      if (ENVIRONMENT_CONFIG.templating.cacheOnCompile) {
+        this.compiledTemplatesCache[path] = template
+      }
+      
+      return template;
+    }
+  },
+  */
   
   renderError: function(options) {
     if (!options.errorCode) { options.errorCode = this.SERVER_ERROR; }
@@ -90,7 +126,7 @@ this.klass = {
         throw new Error("Cannot resume a finalized filter chain.");
       }
       
-      filterChain.pop().bind(self)();
+      setTimeout(filterChain.pop().bind(self), 0);
     }
     
     this.resume();
