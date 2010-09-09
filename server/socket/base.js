@@ -82,7 +82,7 @@ this.clientActionImplementations = {
     this.Models.User.find({username: message.object.username}).one(function (user) {
       client.user = user;
       if (user) {
-        message.reply(true, user);
+        message.reply(true, user.__doc);
       } else {
         message.reply(false, {error: "Invalid username"});
       }
