@@ -125,21 +125,30 @@ this.dispatchToController = function(options) {
   var routing = findMatchingRoute(options);
   var route = routing.route;
     
-  console.log("Determined routing controller: " + route.controller);
-  console.log("Determined routing action: " + route.action);
+  console.log("Determined routing controller: " + route.controller + " with action: " + route.action);
   
-  if (route.options && route.options.collectBody) {
-    var chunks = [];
-    options.request.addListener('data', function(data) {
-      chunks.push(data);
-    });
-    options.request.addListener('end', function() {
-      options.request.completeBody = chunks.join('');
-      console.log("complete body:");
-      console.log(options.request.completeBody);
+  if (routing.found) {
+    if (route.options && route.options.collectBody) {
+      console.log('collecting body');
+      var chunks = [];
+      options.request.addListener('end', function() {
+        console.log('listen end');
+        options.request.completeBody = chunks.join('');
+        createAndExecuteControllerInstanceForRoute(routing, options);
+      });
+      options.request.addListener('data', function(data) {
+        console.log('listen data');
+        chunks.push(data);
+      });
+    } else {
       createAndExecuteControllerInstanceForRoute(routing, options);
-    });
+    }
   } else {
-    createAndExecuteControllerInstanceForRoute(routing, options);
+    if (options.onNoRoute) {
+      options.onNoRoute();
+    } else {
+      createAndExecuteControllerInstanceForRoute(routing, options);
+    }
   }
+  
 };
