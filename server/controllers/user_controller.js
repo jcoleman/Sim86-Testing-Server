@@ -30,6 +30,7 @@ this.klass = {
       this.resume();
     } else {
       this.renderError({errorCode: this.NOT_FOUND});
+      this.resume();
     }
     
     /*
