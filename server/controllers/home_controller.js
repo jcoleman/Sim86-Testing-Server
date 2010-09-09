@@ -5,7 +5,7 @@ this.extensions = [];
 this.klass = {
   
   index: function() {
-    this.render({text: "<html><head><title>HOME</title></head><body><h2>Test Page</h2></body></html>"});
+    this.render({template: "home/index"});
     this.resume();
   }
   
