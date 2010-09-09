@@ -12,8 +12,8 @@ this.klass = {
     this.Models.User.find({token: this.request.json.token}).one(function (user) {
       if (user) {
         // Create new execution attempt record
-        var attempt = new this.Models.ExecutionAttempt(this.request.json);
-        attempt.userId = user._id;
+        var attempt = new self.Models.ExecutionAttempt(self.request.json);
+        attempt.userId = user.id();
         attempt.save(function() {
           self.render({ json: {status: "SUCCESS", attempt: {id: attempt._id}} });
           self.resume();
