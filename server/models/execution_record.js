@@ -52,7 +52,9 @@ this.ExecutionRecord = {
   ],
   
   methods: {
-    
+    id: function() {
+      return this._id.toHexString();
+    }
   },
   
   static: {
