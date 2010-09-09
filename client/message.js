@@ -10,7 +10,7 @@ Sim.Messenger = {
     Sim.Messenger.socket = new io.Socket('localhost', {port:3000});
     Sim.Messenger.socket.connect();
     Sim.Messenger.socket.on('message', function(data) {
-      message = data.evalJSON();
+      var message = data.evalJSON();
       
       var replyId = message.replyId;
       if (replyId) {
