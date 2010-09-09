@@ -93,7 +93,7 @@ this.klass = {
     options.contentType = options.contentType || this.defaultContentType;
     this.render( { contentType: options.contentType,
                    status: options.errorCode,
-                   text: this.DEFAULT_RESPONSES[options.contentType][options.errorCode] } )
+                   text: this.DEFAULT_RESPONSES[options.contentType][options.errorCode] } );
   },
   
   dispatch: function(action) {
