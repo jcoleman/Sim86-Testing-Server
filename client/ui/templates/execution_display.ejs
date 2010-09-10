@@ -1,0 +1,53 @@
+<ul>
+  <li>
+    <span>Count:</span> <span class='record-count'></span>
+  </li>
+  
+  <li>
+    <span>Instruction:</span>
+    <ul>
+      <li>
+        <span>Addressing Mode:</span> <span class='record-instruction-addressingMode'></span>
+      </li>
+      <li>
+        <span>Mnemonic:</span> <span class='record-instruction-mnemonic'></span>
+      </li>
+      <li>
+        <span>Segment:</span> <span class='record-instruction-segment'></span>
+      </li>
+      <li>
+        <span>Offset:</span> <span class='record-instruction-offset'></span>
+      </li>
+      <li>
+        <span>Operands:</span>
+      </li>
+      <li>
+        <span>Raw Bytes:</span>
+      </li>
+    </ul>
+  </li>
+  
+  <li>
+    <span>Memory:</span>
+    <ul>
+      <li>
+        <span>Checksum:</span> <span class='record-memory-checksum'></span>
+      </li>
+      <li>
+        <span>Changes:</span>
+      </li>
+    </ul>
+  </li>
+  
+  <li>
+    <span>Registers:</span>
+    <ul>
+      <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
+      <li>
+        <span><%= register.toUpperCase() %> Register:</span> <span class='record-register-<%= register %>'></span>
+      </li>
+      <% }) %>
+    </ul>
+  </li>
+
+</ul>

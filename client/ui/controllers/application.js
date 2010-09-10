@@ -9,12 +9,24 @@ Sim.UI.ApplicationController = Class.create(Sim.UI.Controller, {
   
   bind: function($super) {
     $super();
-    
     var self = this;
+    
+    Sim.Messenger.receive(this, 'display.attempt', function (message) {
+      if (self.attemptShowController) {
+        self.attemptShowController.destroy();
+      }
+      
+      self.attemptShowController = new Sim.UI.Attempt.ShowController(
+        self.element,
+        {attempt: message.object}
+      );
+    });
+    
     this.loginController = new Sim.UI.LoginController(this.element, {onLogin: function(user) {
+      this.currentUser = user;
       self.loginController.destroy();
       self.loginController = null;
-      alert("Logged in successfully as '" + user.username + "'");
+      self.attemptsList = new Sim.UI.Attempt.ListController(self.element, {});
     }});
   },
   

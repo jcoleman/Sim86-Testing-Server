@@ -14,7 +14,7 @@ Sim.UI.LoginController = Class.create(Sim.UI.Controller, {
     var self = this;
     $('login-button').observe('click', function(event) {
       var username = self.grab('[name=username]').value;
-      Sim.Messenger.send('login', {username: username}, function(message) {
+      Sim.Messenger.sendRemote('login', {username: username}, function(message) {
         if (message.success) {
           self.onLogin(message.object);
         } else {
