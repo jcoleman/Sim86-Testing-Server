@@ -19,7 +19,7 @@ this.klass = {
             self.render({ json: {status: "SUCCESS", record: {id: record._id}} });
             self.resume();
             try {
-              self.WebSocket.publishEvent('executionAttempt', record.attemptId, {object: record});
+              self.WebSocket.publishEvent('executionRecord', record.attemptId, record.__doc);
             } catch (e) {
               require('sys').log("Exception occurred try to publish execution attempt record event: " + e);
             }

@@ -37,7 +37,7 @@ this.onConnection = function(client) {
 
 this.onClientMessage = function(client, message) {
   var reply = function(success, object) {
-    client.sendObject({replyId: message.replyId, success: success, object: object});
+    client.sendObject({responseId: message.replyId, success: success, object: object});
   };
   
   console.log('Received message: ' + JSON.stringify(message));
@@ -79,10 +79,10 @@ this.onClientDisconnect = function(client) {
 this.clientActionImplementations = {
   
   login: function(client, message) {
-    this.Models.User.find({username: message.object.username}).one(function (user) {
+    this.Models.User.find({username: message.object.username}, false).one(function (user) {
       client.user = user;
       if (user) {
-        message.reply(true, user.__doc);
+        message.reply(true, user);
       } else {
         message.reply(false, {error: "Invalid username"});
       }
@@ -90,15 +90,23 @@ this.clientActionImplementations = {
   },
   
   'retrieve.attempts': function(client, message) {
-    this.Models.ExecutionAttempt.find({userId: client.user._id}).all(function (attempts) {
+    console.log('query: ' + JSON.stringify({userId: client.user._id}));
+    this.Models.ExecutionAttempt.find({userId: client.user._id.toHexString()}, false).all(function (attempts) {
+      console.log('results: ' + JSON.stringify(attempts));
       message.reply(true, attempts);
     });
   },
   
   'subscribe.executionAttempt': function(client, message) {
-    if (!this.subscriptions.executionAttempt) { this.subscriptions.executionAttempt = {}; }
+    if (!this.subscriptions.executionRecord) { this.subscriptions.executionRecord = {}; }
     require('sys').log("Subscribing to feed: executionAttempt with subscription id: " + message.object.attemptId);
-    this.subscriptions.executionAttempt[message.object.attemptId] = {client: client};
+    this.subscriptions.executionRecord[message.object.attemptId] = {client: client};
+  },
+  
+  'unsubscribe.executionAttempt': function(client, message) {
+    if (this.subscriptions.executionRecord) {
+      delete this.subscriptions.executionRecord[message.object.attemptId];
+    }
   }
   
 };
@@ -112,7 +120,7 @@ this.publishEvent = function(feed, subscriptionIdentifier, object) {
   var feedSubscriptions = this.subscriptions[feed];
   if (feedSubscriptions && feedSubscriptions[subscriptionIdentifier]) {
     require('sys').log("Publishing to feed: " + feed + " with subscription id: " + subscriptionIdentifier);
-    feedSubscriptions[subscriptionIdentifier].client.sendObject({ feed: feed,
+    feedSubscriptions[subscriptionIdentifier].client.sendObject({ action: 'feed.' + feed,
                                                                   subscriptionIdentifier: subscriptionIdentifier,
                                                                   object: object });
     return true;
