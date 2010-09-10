@@ -21,22 +21,33 @@ Sim.UI.Controller = Class.create({
   },
   
   render: function() {
-    this.element = new Element(this.tag, this.attributes);
-    
-    // Render template
-    var templatePath = this.getTemplatePath()
-    if (templatePath) {
-      this.template = new EJS({text: Sim.UI.Templates[templatePath] });
-    } else {
-      this.template = new EJS({text: ""});
-    }
-    
-    // Update element
-    var html = this.template.render(this);
-    this.element.update(html);
+    this.element = this.renderTemplateIntoElement({ template: this.getTemplatePath(), 
+                                                    tag: this.tag,
+                                                    attributes: this.attributes });
     
     // Insert into container
     this.container.insert({bottom: this.element});
+  },
+  
+  renderTemplateIntoElement: function(options) {
+    // Create element
+    var element = new Element(options.tag || 'div', options.attributes || {});
+    
+    // Render template
+    var template;
+    if (options.template) {
+      template = new EJS({text: Sim.UI.Templates[options.template] });
+    } else {
+      template = new EJS({text: ""});
+    }
+    
+    // Update element
+    console.log('rendering with locals:', options.locals || this);
+    var locals = Object.extend({}, options.locals || this);
+    var html = template.render(locals);
+    element.update(html);
+    
+    return element;
   },
   
   getTemplatePath: function() {
