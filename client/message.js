@@ -6,8 +6,8 @@ Sim.Messenger = {
   // manually prior to usage.
   
   initialize: function() {
-    io.setPath('/client/');
-    Sim.Messenger.socket = new io.Socket('localhost', {port:3000});
+    io.setPath('/io/');
+    Sim.Messenger.socket = new io.Socket();
     Sim.Messenger.socket.connect();
     Sim.Messenger.socket.on('message', Sim.Messenger._processRemoteMessage);
   },
