@@ -11,6 +11,26 @@ var self = this;
   self[module] = DB.model(module);
 });
 
+this.User.find({username: 'system'}).one(function(user) {
+  self.User.system = user;
+});
+
+this.User.__systemModuleAttempts = {};
+this.User.getSystemAttemptForModule = function(moduleId, callback) {
+  var attempt = self.User.__systemModuleAttempts[moduleId];
+  if (attempt) {
+    callback(attempt);
+  } else {
+    self.ExecutionAttempt.find({
+      userId: self.User.system.id(),
+      executionModuleId: moduleId
+    }).last(function(attempt) {
+      self.User.__systemModuleAttempts[attempt.id()] = attempt;
+      callback(attempt);
+    });
+  }
+};
+
 /*
 Mongoose.model('User', require('./user').User);
 this.User = DB.model('User');
