@@ -17,9 +17,10 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
     this.initializeExecutionDisplay();
     
     Sim.Messenger.receive(this, 'feed.executionRecord', function (message) {
-      var record = message.object;
-      if (self.attempt._id == record.attemptId) {
-        self.executionDisplayController.update(record);
+      var object = message.object;
+      if (self.attempt._id == object.record.attemptId) {
+        self.executionDisplayController.update(object.record);
+        self.referenceDisplayController.update(object.reference)
       }
     });
     
@@ -27,9 +28,8 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
   },
   
   initializeExecutionDisplay: function() {
-    this.executionDisplayController = new Sim.UI.Execution.DisplayController(
-      this.element
-    );
+    this.executionDisplayController = new Sim.UI.Execution.DisplayController(this.element);
+    this.referenceDisplayController = new Sim.UI.Execution.DisplayController(this.element);
   },
   
   beginLiveStream: function() {
@@ -42,8 +42,9 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
   
   destroy: function($super) {
     this.endLiveStream();
-    
     Sim.Messenger.ignore(this, 'feed.executionRecord');
+    this.executionDisplayController.destroy();
+    this.referenceDisplayController.destroy();
   },
   
   getTemplatePath: function() {

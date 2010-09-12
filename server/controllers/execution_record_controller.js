@@ -18,12 +18,28 @@ this.klass = {
           record.save(function() {
             self.render({ json: {status: "SUCCESS", record: {id: record._id}} });
             self.resume();
-            try {
-              self.WebSocket.publishEvent('executionRecord', record.attemptId, record.__doc);
-            } catch (e) {
-              require('sys').log("Exception occurred try to publish execution attempt record event: " + e);
-            }
             
+            self.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
+              var publish = function(_referenceRecord) {
+                try {
+                  self.WebSocket.publishEvent( 'executionRecord',
+                                               record.attemptId,
+                                               { record: record.__doc,
+                                                 reference: _referenceRecord } );
+                } catch (e) {
+                  require('sys').log("Exception occurred try to publish execution attempt record event: " + e);
+                }
+              };
+              
+              if (systemAttempt) {
+                self.Models.ExecutionRecord.find({
+                  attemptId: systemAttempt.id(),
+                  count: record.count
+                }, false).one(publish);
+              } else {
+                publish(null);
+              }
+            });
           });
         } else {
           self.render({ json: {status: "INVALID_ATTEMPT_ID"} });

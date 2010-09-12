@@ -21,6 +21,11 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
   update: function(record) {
     var self = this;
     
+    if (!record) {
+      this.statusElement.update('No reference record found.');
+      return;
+    }
+    
     this.registerNames.each(function (register, index) {
       self.registerElements[index].update(record.registers[register]);
     });
@@ -34,6 +39,8 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
   
   cacheDisplayElements: function() {
     var self = this;
+    
+    this.statusElement = self.grab('.record-status');
     
     this.registerElements = this.registerNames.collect(function (register) {
       return self.grab('.record-register-' + register);
