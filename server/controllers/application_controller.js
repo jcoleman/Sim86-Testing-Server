@@ -15,9 +15,18 @@ this.klass = {
     
     if (routeOptions) {
       if (routeOptions.parseJSON) {
-        this.request.json = JSON.parse(this.request.completeBody);
+        try {
+          this.request.json = JSON.parse(this.request.completeBody || "");
+        } catch (e) {
+          this.request.json = {};
+        }
       } else if (routeOptions.parsePOST) {
-        this.request.post = this.QueryString.parse(this.request.completeBody);
+        try {
+          this.request.post = this.QueryString.parse(this.request.completeBody || "");
+        } catch (e) {
+          this.request.post = {};
+        }
+        
       }
     }
   },
