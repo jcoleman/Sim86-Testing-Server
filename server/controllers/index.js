@@ -3,7 +3,8 @@ var self = this;
 var controllers = {};
 
 this.initialize = function(includes) {
-  ['Application', 'Home', 'ExecutionAttempt', 'ExecutionRecord', 'User'].each(function(name) {
+  ['Application', 'Home', 'ExecutionAttempt', 'ExecutionRecord',
+   'ExecutionModule', 'User'].each(function(name) {
     name += "Controller";
     var module = require('./' + name.underscore());
     var Class = includes.Prototype.Class;
@@ -50,6 +51,23 @@ var routes = {
     'new': function(request, additionalParameters) {
       var route = {
         controller: 'user',
+        action: 'new',
+        options: {},
+        additionalParameters: additionalParameters
+      };
+      if (request.method == 'POST' || request.method == 'PUT') {
+        route.options = {
+          parsePOST: true,
+          collectBody: true
+        };
+      }
+      return route;
+    }
+  },
+  'module': {
+    'new': function(request, additionalParameters) {
+      var route = {
+        controller: 'executionModule',
         action: 'new',
         options: {},
         additionalParameters: additionalParameters
