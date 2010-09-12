@@ -3,6 +3,7 @@ this.ExecutionAttempt = {
   properties: [
     'userId',
     'executionModuleId',
+    'filename',
     'completed',
     'createdAt',
     'recordCount',
