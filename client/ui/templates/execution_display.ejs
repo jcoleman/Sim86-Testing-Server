@@ -1,13 +1,63 @@
-<ul>
+<div>
+  <span>Status:</span> <span class='record-status'></span>
+</div>
+
+<div>
+  <span>Count:</span> <span class='record-count'></span>
+</div>
+
+<div class='execution-displays'>
   
-  <li>
-    <span>Status:</span> <span class='record-status'></span>
-  </li>
-  <li>
-    <span>Count:</span> <span class='record-count'></span>
-  </li>
+  <div class='execution-reference'>
+    
+    <h4>Reference Execution</h4>
+    
+    <span>Instruction:</span>
+    <ul>
+      <li>
+        <span>Addressing Mode:</span> <span class='reference-instruction-addressingMode'></span>
+      </li>
+      <li>
+        <span>Mnemonic:</span> <span class='reference-instruction-mnemonic'></span>
+      </li>
+      <li>
+        <span>Segment:</span> <span class='reference-instruction-segment'></span>
+      </li>
+      <li>
+        <span>Offset:</span> <span class='reference-instruction-offset'></span>
+      </li>
+      <li>
+        <span>Operands:</span>
+      </li>
+      <li>
+        <span>Raw Bytes:</span>
+      </li>
+    </ul>
+    
+    <span>Registers:</span>
+    <ul>
+      <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
+      <li>
+        <span><%= register.toUpperCase() %> Register:</span> <span class='reference-register-<%= register %>'></span>
+      </li>
+      <% }) %>
+    </ul>
+    
+    <span>Memory:</span>
+    <ul>
+      <li>
+        <span>Checksum:</span> <span class='reference-memory-checksum'></span>
+      </li>
+      <li>
+        <span>Changes:</span>
+      </li>
+    </ul>
+  </div>
   
-  <li>
+  <div class='execution-record'>
+    
+    <h4>Your Submission</h4>
+    
     <span>Instruction:</span>
     <ul>
       <li>
@@ -29,9 +79,16 @@
         <span>Raw Bytes:</span>
       </li>
     </ul>
-  </li>
-  
-  <li>
+    
+    <span>Registers:</span>
+    <ul>
+      <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
+      <li>
+        <span><%= register.toUpperCase() %> Register:</span> <span class='record-register-<%= register %>'></span>
+      </li>
+      <% }) %>
+    </ul>
+    
     <span>Memory:</span>
     <ul>
       <li>
@@ -41,17 +98,7 @@
         <span>Changes:</span>
       </li>
     </ul>
-  </li>
+    
+  </div>
   
-  <li>
-    <span>Registers:</span>
-    <ul>
-      <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
-      <li>
-        <span><%= register.toUpperCase() %> Register:</span> <span class='record-register-<%= register %>'></span>
-      </li>
-      <% }) %>
-    </ul>
-  </li>
-
-</ul>
+</div>

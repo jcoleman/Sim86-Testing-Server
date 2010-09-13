@@ -18,40 +18,108 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     this.cacheDisplayElements();
   },
   
-  update: function(record) {
+  update: function(record, reference) {
     var self = this;
     
-    if (!record) {
-      this.statusElement.update('No reference record found.');
-      return;
-    }
+    this.statusElement.update(reference ? '' : 'No reference record found.');
+    
+    this.updateReference(reference || this.emptyRecord);
+    
+    this.updateRecordDisplay(record, reference);
+  },
+  
+  updateReference: function(reference) {
+    var elements = this.referenceElements;
     
     this.registerNames.each(function (register, index) {
-      self.registerElements[index].update(record.registers[register]);
+      elements.registerElements[index].update(reference.registers[register]);
     });
+    
+    this.instructionKeys.each(function (key) {
+      elements.instructionElements[key].update(reference.instruction[key]);
+    });
+  },
+  
+  updateRecordDisplay: function(record, reference) {
+    var elements = this.recordElements;
     
     this.countElement.update(record.count);
     
+    this.registerNames.each(function (register, index) {
+      var newValue = record.registers[register];
+      var element = elements.registerElements[index];
+      element.update(newValue);
+      
+      if (newValue != reference.registers[register]) {
+        element.addClassName('record-incorrect');
+      } else {
+        element.removeClassName('record-incorrect');
+      }
+    });
+    
     this.instructionKeys.each(function (key) {
-      self.instructionElements[key].update(record.instruction[key]);
+      var newValue = record.instruction[key];
+      var element = elements.instructionElements[key];
+      element.update(newValue);
+      
+      if (newValue != reference.instruction[key]) {
+        element.addClassName('record-incorrect');
+      } else {
+        element.removeClassName('record-incorrect');
+      }
     });
   },
   
   cacheDisplayElements: function() {
     var self = this;
     
+    this.countElement = self.grab('.record-count');
     this.statusElement = self.grab('.record-status');
     
-    this.registerElements = this.registerNames.collect(function (register) {
-      return self.grab('.record-register-' + register);
-    });
+    this.recordElements = {};
+    this.referenceElements = {};
     
-    this.countElement = this.grab('.record-count');
-    
-    this.instructionElements = {};
-    this.instructionKeys.each(function (key) {
-      self.instructionElements[key] = self.grab('.record-instruction-' + key);
+    ['record', 'reference'].each(function (type) {
+      self[type + 'Elements'].registerElements = self.registerNames.collect(function (register) {
+        return self.grab('.' + type + '-register-' + register);
+      });
+
+      self[type + 'Elements'].instructionElements = {};
+      self.instructionKeys.each(function (key) {
+        self[type + 'Elements'].instructionElements[key] = self.grab('.' + type + '-instruction-' + key);
+      });
     });
+  },
+  
+  emptyRecord: {
+    instruction: {
+      addressingMode: "",
+      mnemonic: "",
+      offset: 0,
+      operands: [],
+      rawBtes: [],
+      segment: 0
+    },
+    memory: {
+      checksum: 0,
+      changed: []
+    },
+    registers: {
+      ax: 0,
+      bx: 0,
+      cx: 0,
+      dx: 0,
+      es: 0,
+      cs: 0,
+      ds: 0,
+      ss: 0,
+      si: 0,
+      di: 0,
+      bp: 0,
+      sp: 0,
+      ip: 0,
+      flags: 0
+    }
   },
   
   getTemplatePath: function() {
