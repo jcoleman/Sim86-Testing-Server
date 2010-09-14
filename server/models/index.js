@@ -25,7 +25,10 @@ this.User.getSystemAttemptForModule = function(moduleId, callback) {
       userId: self.User.system.id(),
       executionModuleId: moduleId
     }).last(function(attempt) {
-      self.User.__systemModuleAttempts[attempt.id()] = attempt;
+      if (attempt) {
+        self.User.__systemModuleAttempts[attempt.id()] = attempt;
+      }
+      
       callback(attempt);
     });
   }
