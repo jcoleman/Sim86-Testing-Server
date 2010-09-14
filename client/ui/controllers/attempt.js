@@ -42,6 +42,7 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
     this.endLiveStream();
     Sim.Messenger.ignore(this, 'feed.executionRecord');
     this.executionDisplayController.destroy();
+    $super();
   },
   
   getTemplatePath: function() {
