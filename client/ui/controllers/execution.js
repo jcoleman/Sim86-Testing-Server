@@ -41,7 +41,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     
     elements.memoryChangesElement.update(
       "<ul>" + reference.memory.changes.inject("", function (html, change) {
-        return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value</span> " + change.value + "</li>";
+        return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value:</span> " + change.value + "</li>";
       }) + "</ul>"
     );
   },
@@ -77,7 +77,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     
     elements.memoryChangesElement.update(
       "<ul>" + record.memory.changes.inject("", function (html, change) {
-        return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value</span> " + change.value + "</li>";
+        return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value:</span> " + change.value + "</li>";
       }) + "</ul>"
     );
   },
