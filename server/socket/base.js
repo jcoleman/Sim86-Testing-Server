@@ -100,12 +100,29 @@ this.clientActionImplementations = {
   'subscribe.executionAttempt': function(client, message) {
     if (!this.subscriptions.executionRecord) { this.subscriptions.executionRecord = {}; }
     require('sys').log("Subscribing to feed: executionAttempt with subscription id: " + message.object.attemptId);
-    this.subscriptions.executionRecord[message.object.attemptId] = {client: client};
+    
+    var attemptId = message.object.attemptId;
+    var subscriptions = this.subscriptions.executionRecord
+    if (!subscriptions[attemptId]) {
+      subscriptions[attemptId] = [];
+    }
+    
+    if (!subscriptions[attemptId].find(function (it) { return it.client == client; })) {
+      subscriptions[attemptId].push({client: client});
+    }
   },
   
   'unsubscribe.executionAttempt': function(client, message) {
-    if (this.subscriptions.executionRecord) {
-      delete this.subscriptions.executionRecord[message.object.attemptId];
+    var attemptId = message.object.attemptId;
+    var subscriptions = this.subscriptions.executionRecord;
+    if (subscriptions && subscriptions[attemptId]) {
+      subscriptions[attemptId] = subscriptions[attemptId].without(
+        subscriptions[attemptId].findAll(function (it) { return it.client == client; })
+      );
+      
+      if (subscriptions[attemptId].length == 0) {
+        delete subscriptions[attemptId];
+      }
     }
   }
   
@@ -120,9 +137,12 @@ this.publishEvent = function(feed, subscriptionIdentifier, object) {
   var feedSubscriptions = this.subscriptions[feed];
   if (feedSubscriptions && feedSubscriptions[subscriptionIdentifier]) {
     require('sys').log("Publishing to feed: " + feed + " with subscription id: " + subscriptionIdentifier);
-    feedSubscriptions[subscriptionIdentifier].client.sendObject({ action: 'feed.' + feed,
-                                                                  subscriptionIdentifier: subscriptionIdentifier,
-                                                                  object: object });
+    feedSubscriptions[subscriptionIdentifier].each(function (subscription) {
+      subscription.client.sendObject({ action: 'feed.' + feed,
+                                       subscriptionIdentifier: subscriptionIdentifier,
+                                       object: object });
+    });
+    
     return true;
   } else {
     require('sys').log("Unable to publish to feed: " + feed + " with subscription id: " + subscriptionIdentifier);
