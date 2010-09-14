@@ -1,3 +1,30 @@
+.application-top-level {
+  width: 1000px;
+}
+
+.application-top-level>div {
+  vertical-align: top;
+  display: inline-block;
+}
+
+.attempt-selector {
+  width: 225px;
+  margin: 5px;
+}
+
+.attempt-display {
+  margin: 5px;
+  width: 720px;
+}
+
+.execution-displays>div {
+  display: inline-block;
+  vertical-align: top;
+  width: 330px;
+  margin: 0;
+  padding: 0;
+}
+
 .record-incorrect {
   border: 1px solid red;
 }
