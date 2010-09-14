@@ -40,7 +40,7 @@ this.ExecutionRecord = {
     {
       memory: [
         {
-          changed: [['address', 'value']]
+          changes: [['address', 'value']]
         },
         'checksum'
       ]
