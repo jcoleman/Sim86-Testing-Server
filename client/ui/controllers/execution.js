@@ -25,7 +25,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     
     this.updateReference(reference || this.emptyRecord);
     
-    this.updateRecordDisplay(record, reference);
+    this.updateRecordDisplay(record, reference || this.emptyRecord);
   },
   
   updateReference: function(reference) {
@@ -38,6 +38,12 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     this.instructionKeys.each(function (key) {
       elements.instructionElements[key].update(reference.instruction[key]);
     });
+    
+    elements.memoryChangesElement.update(
+      "<ul>" + reference.memory.changes.inject("", function (html, change) {
+        return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value</span> " + change.value + "</li>";
+      }) + "</ul>"
+    );
   },
   
   updateRecordDisplay: function(record, reference) {
@@ -68,6 +74,12 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
         element.removeClassName('record-incorrect');
       }
     });
+    
+    elements.memoryChangesElement.update(
+      "<ul>" + record.memory.changes.inject("", function (html, change) {
+        return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value</span> " + change.value + "</li>";
+      }) + "</ul>"
+    );
   },
   
   cacheDisplayElements: function() {
@@ -80,14 +92,17 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     this.referenceElements = {};
     
     ['record', 'reference'].each(function (type) {
-      self[type + 'Elements'].registerElements = self.registerNames.collect(function (register) {
+      var elements = self[type + 'Elements'];
+      elements.registerElements = self.registerNames.collect(function (register) {
         return self.grab('.' + type + '-register-' + register);
       });
 
-      self[type + 'Elements'].instructionElements = {};
+      elements.instructionElements = {};
       self.instructionKeys.each(function (key) {
-        self[type + 'Elements'].instructionElements[key] = self.grab('.' + type + '-instruction-' + key);
+        elements.instructionElements[key] = self.grab('.' + type + '-instruction-' + key);
       });
+      
+      elements.memoryChangesElement = self.grab('.' + type + '-memory-changes');
     });
   },
   
@@ -102,7 +117,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     },
     memory: {
       checksum: 0,
-      changed: []
+      changes: []
     },
     registers: {
       ax: 0,
