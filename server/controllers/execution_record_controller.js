@@ -21,12 +21,13 @@ this.klass = {
             self.resume();
             
             self.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
-              var publish = function(_referenceRecord) {
+              var publish = function(_referenceRecord, _attempt) {
                 try {
                   self.WebSocket.publishEvent( 'executionRecord',
                                                record.attemptId,
                                                { record: record.__doc,
-                                                 reference: _referenceRecord } );
+                                                 reference: _referenceRecord,
+                                                 attempt: _attempt.__doc } );
                 } catch (e) {
                   require('sys').log("Exception occurred try to publish execution attempt record event: " + e);
                 }
@@ -36,7 +37,23 @@ this.klass = {
                 self.Models.ExecutionRecord.find({
                   attemptId: systemAttempt.id(),
                   count: record.count
-                }, false).one(publish);
+                }, false).one(function (reference) {
+                  ++attempt.recordCount;
+                  
+                  var errorDescriptor = record.compareToReference(reference || self.ExecutionModel.getBlankDocument());
+                  if (errorDescriptor[0]) {
+                    // Incorrect... update attempt with error counts/types
+                    ++attempt.incorrectCount;
+                    self._updateAttemptWithErrors(attempt, errorDescriptor[1]);
+                  } else {
+                    // Correct
+                    ++attempt.correctCount;
+                  }
+                  
+                  attempt.save(function() {
+                    publish(reference, attempt);
+                  });
+                });
               } else {
                 publish(null);
               }
@@ -50,6 +67,16 @@ this.klass = {
     } else {
       this.render({ json: {status: "INVALID_ATTEMPT_ID"} });
       this.resume();
+    }
+  },
+  
+  _updateAttemptWithErrors: function(attempt, errors) {
+    var keys = ['registers', 'flags', 'memoryChangeAddresses', 'memoryChangeValues',
+                'operandTypes', 'operandStrings', 'instructionAddressingMode',
+                'instructionSegment', 'instructionOffset', 'instructionMnemonic', 'rawBytes'];
+    for (var i = 0, len = keys.length; i < len; ++i) {
+      var key = keys[i];
+      attempt.errorsByType[key] += errors[key];
     }
   }
   

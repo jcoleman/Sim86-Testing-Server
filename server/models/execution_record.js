@@ -58,15 +58,15 @@ this.ExecutionRecord = {
     
     normalize: function() {
       var instruction = this.instruction;
-      instruction.mnemonic = String(instruction.mnemonic || "").trim().toLowerCase();
-      instruction.addressingMode = String(instruction.addressingMode || "").trim().toLowerCase();
+      instruction.mnemonic = String(instruction.mnemonic || "").trim().toUpperCase();
+      instruction.addressingMode = String(instruction.addressingMode || "").trim().toUpperCase();
       
       var origOps = instruction.operands, normOps = [];
       for (var i = 0, len = origOps.length; i < len; ++i) {
         var op = origOps[i];
         normOps.push({
-          type: op.type.trim().toLowerCase(),
-          string: op.string.trim().toLowerCase()
+          type: op.type.trim().toUpperCase(),
+          string: op.string.trim().toUpperCase()
         });
       }
       instruction.operands = normOps;
@@ -81,17 +81,21 @@ this.ExecutionRecord = {
         memoryChangeValues: 0,
         operandTypes: 0,
         operandStrings: 0,
-        instruction: 0,
+        instructionAddressingMode: 0,
+        instructionSegment: 0,
+        instructionOffset: 0,
+        instructionMnemonic: 0,
         rawBytes: 0
       };
       
       // Compare instruction
-      var instructionKeys = ['addressingMode', 'segment', 'offset', 'mnemonic'];
+      var instructionKeys = ['addressingMode', 'segment', 'offset', 'mnemonic'],
+          instructionErrorKeys = ['instructionAddressingMode', 'instructionSegment', 'instructionOffset', 'instructionMnemonic'];
       for (var i = 0, len = instructionKeys.length; i < len; ++i) {
         var key = instructionKeys[i];
         if (this.instruction[key] != ref.instruction[key]) {
           incorrect = true;
-          ++errors.instruction;
+          ++errors[instructionErrorKeys[i]];
         }
       }
       
@@ -147,7 +151,7 @@ this.ExecutionRecord = {
         }
       };
       
-      if (self.instruction.mnemonic == 'xchg') {
+      if (this.instruction.mnemonic == 'xchg') {
         // Special case, operand order doesn't matter
         var cmp0 = checkOp(selfOps[0], refOps[0])
         if (!cmp0[0] || !cmp[1]) {
@@ -179,7 +183,7 @@ this.ExecutionRecord = {
       }
       
       // Compare flags separately since non-essential bits are undefined
-      if (self.registers.flags != ref.registers.flags) {
+      if (this.registers.flags != ref.registers.flags) {
         incorrect = true;
         ++errors.flags;
       }
@@ -209,6 +213,7 @@ this.ExecutionRecord = {
         if (!valCorrect) { ++errors.memoryChangeValues; }
       }
       
+      return [incorrect, errors];
     }
   },
   

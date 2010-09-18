@@ -16,7 +16,7 @@ this.klass = {
           if (module) {
             // Create new execution attempt record
             var attempt = new self.Models.ExecutionAttempt(self.request.json);
-            attempt.createdAt = new Date();
+            attempt.initializeValues();
             attempt.userId = user.id();
             console.log("got module: " + module.id() + " for attempt");
             attempt.executionModuleId = module.id();
