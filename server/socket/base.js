@@ -97,6 +97,34 @@ this.clientActionImplementations = {
     });
   },
   
+  'retrieve.executionRecord': function(client, message) {
+    var self = this;
+    var count = message.object.count;
+    var attempt = message.object.attempt;
+    
+    this.Models.ExecutionRecord.find({attemptId: attempt._id, count: count}, false).one(function (record) {
+      self.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
+        var publish = function(_referenceRecord) {
+          try {
+            message.reply(true, { record: record,
+                                  reference: _referenceRecord });
+          } catch (e) {
+            require('sys').log("Exception occurred try to reply with execution record: " + e);
+          }
+        };
+        
+        if (systemAttempt) {
+          self.Models.ExecutionRecord.find({
+            attemptId: systemAttempt.id(),
+            count: count
+          }, false).one(publish);
+        } else {
+          publish(null);
+        }
+      });
+    });
+  },
+  
   'subscribe.executionAttempt': function(client, message) {
     if (!this.subscriptions.executionRecord) { this.subscriptions.executionRecord = {}; }
     require('sys').log("Subscribing to feed: executionAttempt with subscription id: " + message.object.attemptId);
@@ -116,7 +144,7 @@ this.clientActionImplementations = {
     var attemptId = message.object.attemptId;
     var subscriptions = this.subscriptions.executionRecord;
     if (subscriptions && subscriptions[attemptId]) {
-      subscriptions[attemptId] = subscriptions[attemptId].without(
+      subscriptions[attemptId] = subscriptions[attemptId].without.apply(subscriptions[attemptId],
         subscriptions[attemptId].findAll(function (it) { return it.client == client; })
       );
       
