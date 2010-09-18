@@ -1,5 +1,9 @@
 .application-top-level {
-  width: 1000px;
+}
+
+.horizontal-container>div {
+  vertical-align: top;
+  display: inline-block;
 }
 
 .application-top-level>div {
@@ -14,13 +18,17 @@
 
 .attempt-display {
   margin: 5px;
-  width: 720px;
+}
+
+.attempt-details {
+  float: right;
+  width: 20em;
 }
 
 .execution-displays>div {
   display: inline-block;
   vertical-align: top;
-  width: 330px;
+  width: 300px;
   margin: 0;
   padding: 0;
 }
