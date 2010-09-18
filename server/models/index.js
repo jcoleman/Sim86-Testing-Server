@@ -33,3 +33,11 @@ this.User.getSystemAttemptForModule = function(moduleId, callback) {
     });
   }
 };
+
+this.ExecutionRecord.getBlankDocument = function() {
+  var doc = self.__blankDocument
+  if (!doc) {
+    doc = self.__blankDocument = (new self.ExecutionRecord()).__doc;
+  }
+  return doc;
+};
