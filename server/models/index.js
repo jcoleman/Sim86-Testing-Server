@@ -33,17 +33,3 @@ this.User.getSystemAttemptForModule = function(moduleId, callback) {
     });
   }
 };
-
-/*
-Mongoose.model('User', require('./user').User);
-this.User = DB.model('User');
-
-Mongoose.model('ExecutionAttempt', require('./execution_attempt').ExecutionAttempt);
-this.ExecutionAttempt = DB.model('ExecutionAttempt');
-
-Mongoose.model('ExecutionModule', require('./execution_module').ExecutionModule);
-this.ExecutionModule = DB.model('ExecutionModule');
-
-Mongoose.model('ExecutionRecord', require('./execution_record').ExecutionRecord);
-this.ExecutionRecord = DB.model('ExecutionRecord');
-*/
