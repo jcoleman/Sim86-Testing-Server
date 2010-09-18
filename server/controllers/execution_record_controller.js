@@ -8,13 +8,14 @@ this.klass = {
   
   'new': function() {
     var self = this;
-    
+    console.log('complete body: ' + this.request.completeBody);
     if (this.request.json.attemptId) {
       this.Models.ExecutionAttempt.find({_id: this.request.json.attemptId}).one(function(attempt) {
         if (attempt) {
           // Create new execution record
           var record = new self.Models.ExecutionRecord(self.request.json.object);
           record.attemptId = attempt.id();
+          record.normalize();
           record.save(function() {
             self.render({ json: {status: "SUCCESS", record: {id: record._id}} });
             self.resume();

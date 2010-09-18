@@ -56,6 +56,22 @@ this.ExecutionRecord = {
       return this._id.toHexString();
     },
     
+    normalize: function() {
+      var instruction = this.instruction;
+      instruction.mnemonic = String(instruction.mnemonic || "").trim().toLowerCase();
+      instruction.addressingMode = String(instruction.addressingMode || "").trim().toLowerCase();
+      
+      var origOps = instruction.operands, normOps = [];
+      for (var i = 0, len = origOps.length; i < len; ++i) {
+        var op = origOps[i];
+        normOps.push({
+          type: op.type.trim().toLowerCase(),
+          string: op.string.trim().toLowerCase()
+        });
+      }
+      instruction.operands = normOps;
+    },
+    
     compareToReference: function(ref) {
       var incorrect = false;
       var errors = {
