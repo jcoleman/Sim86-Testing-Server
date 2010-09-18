@@ -2,6 +2,7 @@ this.ExecutionAttempt = {
   
   properties: [
     'userId',
+    'createdAt',
     'executionModuleId',
     'filename',
     'completed',
