@@ -23,10 +23,24 @@ Sim.UI.ApplicationController = Class.create(Sim.UI.Controller, {
     });
     
     this.loginController = new Sim.UI.LoginController(this.grab('.login'), {onLogin: function(user) {
-      this.currentUser = user;
+      self.currentUser = user;
       self.loginController.destroy();
-      self.loginController = null;
-      self.attemptsList = new Sim.UI.Attempt.ListController(self.grab('.attempt-selector'), {});
+      delete self.loginController;
+      
+      var resetAttemptList = function() {
+        if (self.attemptsList) {
+          self.attemptsList.destroy();
+          delete self.attemptsList;
+        }
+        self.attemptsList = new Sim.UI.Attempt.ListController(self.grab('.attempt-selector'), {});
+      };
+      
+      self.grab('.refresh-attempt-list-link').observe('click', function (event) {
+        resetAttemptList();
+        event.stop();
+      }).show();
+      
+      resetAttemptList();
     }});
   },
   
