@@ -3,6 +3,7 @@ this.ExecutionRecord = {
   properties: [
     'attemptId',
     'count',
+    'correct',
     {
       instruction: [
         'addressingMode',
@@ -48,7 +49,7 @@ this.ExecutionRecord = {
   ],
   
   indexes: [
-    { executionAttemptId: 1, count: 1 }
+    { executionAttemptId: 1, count: 1, correct: 1 }
   ],
   
   methods: {

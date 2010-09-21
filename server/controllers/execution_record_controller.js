@@ -33,7 +33,9 @@ this.klass = {
     record.attemptId = attempt.id();
     record.normalize();
     
-    this._findReferenceAndUpdateAttempt(record, attempt, function (referenceRecord) {
+    this._findReferenceAndUpdateAttempt(record, attempt, function (correct, referenceRecord) {
+      record.correct = correct;
+      
       record.save(function () {
         self.render({ json: {status: "SUCCESS", record: {id: record._id}} });
         self.resume();
@@ -64,11 +66,11 @@ this.klass = {
           self._updateAttemptWithReferenceDiff(attempt, errorDescriptor);
           
           attempt.save(function() {
-            callback(reference);
+            callback(!errorDescriptor[0], reference);
           });
         });
       } else {
-        callback(null);
+        callback(false, null);
       }
     });
   },
