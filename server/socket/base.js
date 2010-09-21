@@ -18,17 +18,23 @@ this.initialize = function(options) {
   return this;
 };
 
+this.subscriptions = {
+  executionRecord: {}
+};
+
 
 // ----------------------------------------------------------------------------
 // Client Connection Callbacks
 // ----------------------------------------------------------------------------
 
 this.onConnection = function(client) {
-  sys.log("Client connected:");
-  sys.inspect(client);
-  
   // Inject client helpers
   client.sendObject = this.sendObjectToClientAsMessage.curry(client);
+  
+  client.subscriptions = {
+    executionRecord: []
+  };
+  
   
   // Setup connected client callbacks
   client.on('message', this.onClientMessage.bind(this, client));
@@ -68,7 +74,13 @@ this.onClientMessage = function(client, message) {
 };
 
 this.onClientDisconnect = function(client) {
+  var self = this;
   
+  client.subscriptions.executionRecord.each(function (attemptId) {
+    sys.log('Cleaning up client subscription: ' + attemptId + ' for client ' + client);
+    var message = { object: {attemptId: attemptId} };
+    self.clientActionImplementations['unsubscribe.executionAttempt'].apply(self, [client, message]);
+  });
 };
 
 
@@ -126,29 +138,30 @@ this.clientActionImplementations = {
   },
   
   'subscribe.executionAttempt': function(client, message) {
-    if (!this.subscriptions.executionRecord) { this.subscriptions.executionRecord = {}; }
     require('sys').log("Subscribing to feed: executionAttempt with subscription id: " + message.object.attemptId);
     
     var attemptId = message.object.attemptId;
-    var subscriptions = this.subscriptions.executionRecord
+    var subscriptions = this.subscriptions.executionRecord;
     if (!subscriptions[attemptId]) {
       subscriptions[attemptId] = [];
     }
     
     if (!subscriptions[attemptId].find(function (it) { return it.client == client; })) {
       subscriptions[attemptId].push({client: client});
+      client.subscriptions.executionRecord.push(attemptId);
     }
   },
   
   'unsubscribe.executionAttempt': function(client, message) {
     var attemptId = message.object.attemptId;
     var subscriptions = this.subscriptions.executionRecord;
-    if (subscriptions && subscriptions[attemptId]) {
+    if (subscriptions[attemptId]) {
       subscriptions[attemptId] = subscriptions[attemptId].without.apply(subscriptions[attemptId],
         subscriptions[attemptId].findAll(function (it) { return it.client == client; })
       );
       
       if (subscriptions[attemptId].length == 0) {
+        client.subscriptions.executionRecord = client.subscriptions.executionRecord.without(attemptId);
         delete subscriptions[attemptId];
       }
     }
@@ -177,10 +190,6 @@ this.publishEvent = function(feed, subscriptionIdentifier, object) {
     return false;
   }
 }.bind(this);
-
-this.subscriptions = {
-  
-};
 
 
 // ----------------------------------------------------------------------------
