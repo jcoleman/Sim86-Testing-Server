@@ -25,6 +25,11 @@
   width: 20em;
 }
 
+span.label {
+  display: inline-block;
+  width: 8em;
+}
+
 .execution-displays>div {
   display: inline-block;
   vertical-align: top;

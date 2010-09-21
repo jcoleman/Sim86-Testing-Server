@@ -1,9 +1,9 @@
 <div>
-  <span>Status:</span> <span class='record-status'></span>
+  <span class="label">Status:</span> <span class='record-status'></span>
 </div>
 
 <div>
-  <span>Count:</span> <span class='record-count'></span>
+  <span class="label">Count:</span> <span class='record-count'></span>
 </div>
 
 <div class='execution-displays'>
@@ -15,22 +15,22 @@
     <span>Instruction:</span>
     <ul>
       <li>
-        <span>Addressing Mode:</span> <span class='reference-instruction-addressingMode'></span>
+        <span class="label">Addressing Mode:</span> <span class='reference-instruction-addressingMode'></span>
       </li>
       <li>
-        <span>Mnemonic:</span> <span class='reference-instruction-mnemonic'></span>
+        <span class="label">Mnemonic:</span> <span class='reference-instruction-mnemonic'></span>
       </li>
       <li>
-        <span>Segment:</span> <span class='reference-instruction-segment'></span>
+        <span class="label">Segment:</span> <span class='reference-instruction-segment'></span>
       </li>
       <li>
-        <span>Offset:</span> <span class='reference-instruction-offset'></span>
+        <span class="label">Offset:</span> <span class='reference-instruction-offset'></span>
       </li>
       <li>
-        <span>Operands:</span>
+        <span class="label">Operands:</span>
       </li>
       <li>
-        <span>Raw Bytes:</span>
+        <span class="label">Raw Bytes:</span>
       </li>
     </ul>
     
@@ -38,7 +38,7 @@
     <ul>
       <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
       <li>
-        <span><%= register.toUpperCase() %> Register:</span> <span class='reference-register-<%= register %>'></span>
+        <span class="label"><%= register.toUpperCase() %> Register:</span> <span class='reference-register-<%= register %>'></span>
       </li>
       <% }) %>
     </ul>
@@ -46,7 +46,7 @@
     <span>Memory:</span>
     <ul>
       <li>
-        <span>Checksum:</span> <span class='reference-memory-checksum'></span>
+        <span class="label">Checksum:</span> <span class='reference-memory-checksum'></span>
       </li>
       <li>
         <span>Changes:</span>
@@ -62,22 +62,22 @@
     <span>Instruction:</span>
     <ul>
       <li>
-        <span>Addressing Mode:</span> <span class='record-instruction-addressingMode'></span>
+        <span class="label">Addressing Mode:</span> <span class='record-instruction-addressingMode'></span>
       </li>
       <li>
-        <span>Mnemonic:</span> <span class='record-instruction-mnemonic'></span>
+        <span class="label">Mnemonic:</span> <span class='record-instruction-mnemonic'></span>
       </li>
       <li>
-        <span>Segment:</span> <span class='record-instruction-segment'></span>
+        <span class="label">Segment:</span> <span class='record-instruction-segment'></span>
       </li>
       <li>
-        <span>Offset:</span> <span class='record-instruction-offset'></span>
+        <span class="label">Offset:</span> <span class='record-instruction-offset'></span>
       </li>
       <li>
-        <span>Operands:</span>
+        <span class="label">Operands:</span>
       </li>
       <li>
-        <span>Raw Bytes:</span>
+        <span class="label">Raw Bytes:</span>
       </li>
     </ul>
     
@@ -85,7 +85,7 @@
     <ul>
       <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
       <li>
-        <span><%= register.toUpperCase() %> Register:</span> <span class='record-register-<%= register %>'></span>
+        <span class="label"><%= register.toUpperCase() %> Register:</span> <span class='record-register-<%= register %>'></span>
       </li>
       <% }) %>
     </ul>
@@ -93,10 +93,10 @@
     <span>Memory:</span>
     <ul>
       <li>
-        <span>Checksum:</span> <span class='record-memory-checksum'></span>
+        <span class="label">Checksum:</span> <span class='record-memory-checksum'></span>
       </li>
       <li>
-        <span>Changes:</span>
+        <span class="label">Changes:</span>
         <div class='record-memory-changes'></div>
       </li>
     </ul>
