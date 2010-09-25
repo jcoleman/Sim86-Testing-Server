@@ -35,6 +35,14 @@ this.onConnection = function(client) {
     executionRecord: []
   };
   
+  client.getUserId = function() {
+    if (client.user) {
+      return client.user._id.toHexString();
+    } else {
+      return null;
+    }
+  };
+  
   
   // Setup connected client callbacks
   client.on('message', this.onClientMessage.bind(this, client));
@@ -111,29 +119,38 @@ this.clientActionImplementations = {
   
   'retrieve.executionRecord': function(client, message) {
     var self = this;
-    var count = message.object.count;
-    var attempt = message.object.attempt;
+    var object = message.object;
     
-    this.Models.ExecutionRecord.find({attemptId: attempt._id, count: count}, false).one(function (record) {
-      self.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
-        var publish = function(_referenceRecord) {
-          try {
-            message.reply(true, { record: record,
-                                  reference: _referenceRecord });
-          } catch (e) {
-            require('sys').log("Exception occurred try to reply with execution record: " + e);
-          }
-        };
+    var attemptFinder = {_id: object.attemptId, userId: client.getUserId()};
+    this.Models.ExecutionAttempt.find(attemptFinder, false).one(function (attempt) {
+      if (attempt) {
+        var restrictions = object.restrictions;
+        restrictions.attemptId = object.attemptId;
         
-        if (systemAttempt) {
-          self.Models.ExecutionRecord.find({
-            attemptId: systemAttempt.id(),
-            count: count
-          }, false).one(publish);
-        } else {
-          publish(null);
-        }
-      });
+        self.Models.ExecutionRecord.find(restrictions, false).limit(1).one(function (record) {
+          self.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
+            var publish = function(_referenceRecord) {
+              try {
+                message.reply(true, { record: record,
+                                      reference: _referenceRecord });
+              } catch (e) {
+                require('sys').log("Exception occurred try to reply with execution record: " + e);
+              }
+            };
+
+            if (systemAttempt) {
+              self.Models.ExecutionRecord.find({
+                attemptId: systemAttempt.id(),
+                count: record.count
+              }, false).one(publish);
+            } else {
+              publish(null);
+            }
+          });
+        });
+      } else {
+        message.reply(false, {error: "No attempt found for current user"});
+      }
     });
   },
   

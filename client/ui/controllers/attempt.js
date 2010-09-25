@@ -52,20 +52,25 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
   },
   
   displayInstructionAtCount: function(count) {
-    var self = this;
     if (this.instructionCache[count]) {
       this.updateDisplays(this.instructionCache[count]);
     } else {
-      Sim.Messenger.sendRemote('retrieve.executionRecord', {count: count, attempt: this.attempt}, function (message) {
-        var object = message.object;
-        if (object.record) {
-          self.instructionCache[count] = object;
-          self.updateDisplays(object);
-        } else {
-          alert('No record found for this attempt with instruction count: ' + count);
-        }
-      });
+      this.retrieveAndDisplayInstruction(this.attempt._id, {count: count});
     }
+  },
+  
+  retrieveAndDisplayInstruction: function(attemptId, restrictions) {
+    var self = this;
+    var object = {attemptId: attemptId, restrictions: restrictions};
+    Sim.Messenger.sendRemote('retrieve.executionRecord', object, function (message) {
+      var object = message.object;
+      if (object.record) {
+        self.instructionCache[object.record.count] = object;
+        self.updateDisplays(object);
+      } else {
+        alert('No execution record found for query');
+      }
+    });
   },
   
   updateDisplays: function(object) {
