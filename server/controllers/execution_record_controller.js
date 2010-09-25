@@ -62,7 +62,7 @@ this.klass = {
         self.Models.ExecutionRecord.find(finder, false).one(function (reference) {
           ++attempt.recordCount;
           
-          var errorDescriptor = record.compareToReference(reference || self.ExecutionModel.getBlankDocument());
+          var errorDescriptor = record.compareToReference(reference || self.Models.ExecutionRecord.getBlankDocument());
           self._updateAttemptWithReferenceDiff(attempt, errorDescriptor);
           
           attempt.save(function() {
