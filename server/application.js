@@ -8,11 +8,21 @@ var environmentConfiguration = {
     root: Path.join(Path.dirname(__filename), 'public'),
     templating: {
       cacheOnCompile: false
+    },
+    db: {
+      host: "localhost",
+      database: 'db'
     }
   },
   prod: {
+    port: 3000,
+    root: Path.join(Path.dirname(__filename), 'public'),
     templating: {
       cacheOnCompile: true
+    },
+    db: {
+      host: "localhost",
+      database: 'sim86backend'
     }
   }
 }

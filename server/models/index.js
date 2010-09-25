@@ -1,5 +1,5 @@
 var Mongoose = require('../../vendor/mongoose/mongoose').Mongoose;
-var DB = Mongoose.connect('mongodb://localhost/db');
+var DB = Mongoose.connect('mongodb://' + ENVIRONMENT_CONFIG.db.host + '/' + ENVIRONMENT_CONFIG.db.database);
 
 this.Mongoose = Mongoose;
 this.DB = DB;
