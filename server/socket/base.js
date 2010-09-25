@@ -127,26 +127,33 @@ this.clientActionImplementations = {
         var restrictions = object.restrictions;
         restrictions.attemptId = object.attemptId;
         
-        self.Models.ExecutionRecord.find(restrictions, false).limit(1).one(function (record) {
-          self.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
-            var publish = function(_referenceRecord) {
-              try {
-                message.reply(true, { record: record,
-                                      reference: _referenceRecord });
-              } catch (e) {
-                require('sys').log("Exception occurred try to reply with execution record: " + e);
-              }
-            };
-
-            if (systemAttempt) {
-              self.Models.ExecutionRecord.find({
-                attemptId: systemAttempt.id(),
-                count: record.count
-              }, false).one(publish);
-            } else {
-              publish(null);
+        self.Models.ExecutionRecord.find(restrictions, false)
+                                   .limit(1)
+                                   .sort(object.sort || [['count', 1]])
+                                   .one(function (record) {
+          var publish = function(_referenceRecord) {
+            try {
+              message.reply(true, { record: record,
+                                    reference: _referenceRecord });
+            } catch (e) {
+              require('sys').log("Exception occurred try to reply with execution record: " + e);
             }
-          });
+          };
+          
+          if (record) {
+            self.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
+              if (systemAttempt) {
+                self.Models.ExecutionRecord.find({
+                  attemptId: systemAttempt.id(),
+                  count: record.count
+                }, false).one(publish);
+              } else {
+                publish(null);
+              }
+            });
+          } else {
+           publish(null); 
+          }
         });
       } else {
         message.reply(false, {error: "No attempt found for current user"});
