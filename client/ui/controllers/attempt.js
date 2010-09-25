@@ -45,6 +45,22 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
       self.displayInstructionAtCount(self.currentInstructionCount + 1);
       event.stop();
     });
+    
+    this.grab('.previous-incorrect-instruction-link').observe('click', function (event) {
+      self.retrieveAndDisplayInstruction({
+        count: {"$lt": self.currentInstructionCount},
+        correct: false
+      }, [['count', -1]]);
+      event.stop();
+    });
+    
+    this.grab('.next-incorrect-instruction-link').observe('click', function (event) {
+      self.retrieveAndDisplayInstruction({
+        count: {"$gt": self.currentInstructionCount},
+        correct: false
+      }, [['count', 1]]);
+      event.stop();
+    });
   },
   
   initializeExecutionDisplay: function() {
@@ -55,13 +71,13 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
     if (this.instructionCache[count]) {
       this.updateDisplays(this.instructionCache[count]);
     } else {
-      this.retrieveAndDisplayInstruction(this.attempt._id, {count: count});
+      this.retrieveAndDisplayInstruction({count: count});
     }
   },
   
-  retrieveAndDisplayInstruction: function(attemptId, restrictions) {
+  retrieveAndDisplayInstruction: function(restrictions, sort) {
     var self = this;
-    var object = {attemptId: attemptId, restrictions: restrictions};
+    var object = {attemptId: this.attempt._id, restrictions: restrictions, sort: sort};
     Sim.Messenger.sendRemote('retrieve.executionRecord', object, function (message) {
       var object = message.object;
       if (object.record) {
