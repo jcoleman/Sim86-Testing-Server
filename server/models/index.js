@@ -37,7 +37,9 @@ this.User.getSystemAttemptForModule = function(moduleId, callback) {
 this.ExecutionRecord.getBlankDocument = function() {
   var doc = self.__blankDocument
   if (!doc) {
-    doc = self.__blankDocument = (new self.ExecutionRecord()).__doc;
+    var newRecord = new self.ExecutionRecord();
+    newRecord.normalize();
+    doc = self.__blankDocument = newRecord.__doc;
   }
   return doc;
 };

@@ -158,15 +158,15 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       flags: 0
     },
     computedFlags: {
-      cf: 0,
-      pf: 0,
-      af: 0,
-      zf: 0,
-      sf: 0,
-      tf: 0,
-      'if': 0,
-      df: 0,
-      of: 0
+      cf: false,
+      pf: false,
+      af: false,
+      zf: false,
+      sf: false,
+      tf: false,
+      'if': false,
+      df: false,
+      of: false
     }
   },
   
