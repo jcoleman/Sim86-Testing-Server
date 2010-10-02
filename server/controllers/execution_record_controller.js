@@ -81,7 +81,8 @@ this.klass = {
       ++attempt.incorrectCount;
       
       var errors = errorDescriptor[1];
-      var keys = ['registers', 'flags', 'memoryChangeAddresses', 'memoryChangeValues',
+      var keys = ['registers', 'cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of',
+                  'memoryChangeAddresses', 'memoryChangeValues',
                   'operandTypes', 'operandStrings', 'instructionAddressingMode',
                   'instructionSegment', 'instructionOffset', 'instructionMnemonic', 'rawBytes'];
       for (var i = 0, len = keys.length; i < len; ++i) {

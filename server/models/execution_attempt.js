@@ -12,7 +12,7 @@ this.ExecutionAttempt = {
     {
       errorsByType: [
         'registers',
-        'flags',
+        'cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of',
         'memoryChangeAddresses',
         'memoryChangeValues',
         'operandTypes',

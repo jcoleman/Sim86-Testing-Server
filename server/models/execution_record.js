@@ -109,7 +109,15 @@ this.ExecutionRecord = {
       var incorrect = false;
       var errors = {
         registers: 0,
-        flags: 0,
+        cf: 0,
+        pf: 0,
+        af: 0,
+        zf: 0,
+        sf: 0,
+        tf: 0,
+        'if': 0,
+        df: 0,
+        of: 0,
         memoryChangeAddresses: 0,
         memoryChangeValues: 0,
         operandTypes: 0,
@@ -216,6 +224,14 @@ this.ExecutionRecord = {
       }
       
       // Compare flags separately since non-essential bits are undefined
+      var flags = ['cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of'];
+      for (var i = 0, len = flags.length; i < len; ++i) {
+        var flag = flags[i];
+        if (this.computedFlags[flag] != ref.computedFlags[flag]) {
+          incorrect = true;
+          ++errors[flag];
+        }
+      }
       if (this.registers.flags != ref.registers.flags) {
         incorrect = true;
         ++errors.flags;
