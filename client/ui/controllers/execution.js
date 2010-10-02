@@ -7,6 +7,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
   initialize: function($super, container, options) {
     this.instructionKeys = ['addressingMode', 'mnemonic', 'segment', 'offset'];
     
+    this.flagNames = ['cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of'];
     this.registerNames = ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'];
     
     $super(container);
@@ -37,6 +38,10 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     
     this.instructionKeys.each(function (key) {
       elements.instructionElements[key].update(reference.instruction[key]);
+    });
+    
+    this.flagNames.each(function (key) {
+      elements.flagElements[key].update(reference.computedFlags[key] ? 'ON' : 'OFF');
     });
     
     elements.memoryChangesElement.update(
@@ -75,6 +80,18 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       }
     });
     
+    this.flagNames.each(function (key) {
+      var newValue = record.computedFlags[key];
+      var element = elements.flagElements[key];
+      element.update(newValue ? 'ON' : 'OFF');
+      
+      if (newValue != reference.computedFlags[key]) {
+        element.addClassName('record-incorrect');
+      } else {
+        element.removeClassName('record-incorrect');
+      }
+    });
+    
     elements.memoryChangesElement.update(
       "<ul>" + record.memory.changes.inject("", function (html, change) {
         return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value:</span> " + change.value + "</li>";
@@ -100,6 +117,11 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       elements.instructionElements = {};
       self.instructionKeys.each(function (key) {
         elements.instructionElements[key] = self.grab('.' + type + '-instruction-' + key);
+      });
+      
+      elements.flagElements = {};
+      self.flagNames.each(function (key) {
+        elements.flagElements[key] = self.grab('.' + type + '-flag-' + key);
       });
       
       elements.memoryChangesElement = self.grab('.' + type + '-memory-changes');
@@ -134,6 +156,17 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       sp: 0,
       ip: 0,
       flags: 0
+    },
+    computedFlags: {
+      cf: 0,
+      pf: 0,
+      af: 0,
+      zf: 0,
+      sf: 0,
+      tf: 0,
+      'if': 0,
+      df: 0,
+      of: 0
     }
   },
   

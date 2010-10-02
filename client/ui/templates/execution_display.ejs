@@ -43,6 +43,15 @@
       <% }) %>
     </ul>
     
+    <span>Flags:</span>
+    <ul>
+      <% ['cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of'].each(function(flag) { %>
+      <li>
+        <span class="label"><%= flag.toUpperCase() %> Flag:</span> <span class='reference-flag-<%= flag %>'></span>
+      </li>
+      <% }) %>
+    </ul>
+    
     <span>Memory:</span>
     <ul>
       <li>
@@ -86,6 +95,15 @@
       <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
       <li>
         <span class="label"><%= register.toUpperCase() %> Register:</span> <span class='record-register-<%= register %>'></span>
+      </li>
+      <% }) %>
+    </ul>
+    
+    <span>Flags:</span>
+    <ul>
+      <% ['cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of'].each(function(flag) { %>
+      <li>
+        <span class="label"><%= flag.toUpperCase() %> Flag:</span> <span class='record-flag-<%= flag %>'></span>
       </li>
       <% }) %>
     </ul>
