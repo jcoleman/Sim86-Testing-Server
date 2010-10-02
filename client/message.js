@@ -5,11 +5,16 @@ Sim.Messenger = {
   // This is purposefully NOT a class... so initialize should be called (only once)
   // manually prior to usage.
   
-  initialize: function() {
+  initialize: function(callbacks) {
     io.setPath('/io/');
     Sim.Messenger.socket = new io.Socket();
     Sim.Messenger.socket.connect();
     Sim.Messenger.socket.on('message', Sim.Messenger._processRemoteMessage);
+    Sim.Messenger.socket.on('disconnect', function() {
+      if (callbacks.onDisconnect) {
+        callbacks.onDisconnect();
+      }
+    });
   },
   
   sendLocal: function(action, object, callback, responseId) {

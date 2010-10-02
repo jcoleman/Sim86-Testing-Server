@@ -3,7 +3,11 @@
 Sim.UI.ApplicationController = Class.create(Sim.UI.Controller, {
   
   initialize: function($super, container) {
-    Sim.Messenger.initialize();
+    Sim.Messenger.initialize({
+      onDisconnect: function() {
+        window.location.reload();
+      }
+    });
     $super(container);
   },
   
