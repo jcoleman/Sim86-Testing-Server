@@ -97,20 +97,12 @@ this.ExecutionRecord = {
         ['of', 11]
       ];
       
-      console.log('initial flags: ' + Object.inspect(this.computedFlags));
       var flags = {};
       var flagsRegister = Number(this.registers.flags || 0);
       for (var i = 0, len = flagIndices.length; i < len; ++i) {
         var flagDescriptor = flagIndices[i];
         this.computedFlags[flagDescriptor[0]] = !!((flagsRegister >> flagDescriptor[1]) & 1);
-        console.log('for flags value: ' + flagsRegister + ' and flag: ' + flagDescriptor[0] + ' at bit: ' + flagDescriptor[1] + ' got value: ' + !!((flagsRegister >> flagDescriptor[1]) & 1));
       }
-      
-      /*this.computedFlags = flags;
-      for (var i = 0, len = flagIndices.length; i < len; ++i) {
-        var flagDescriptor = flagIndices[i];
-        console.log(flagDescriptor[0] + ' now set to: ' + this.flags[flagDescriptor[0]]);
-      }*/
     },
     
     compareToReference: function(ref) {
