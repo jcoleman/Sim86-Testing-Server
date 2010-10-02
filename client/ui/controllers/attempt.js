@@ -123,7 +123,8 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
   elementCache: {},
   
   attemptErrorKeys: [
-    'registers', 'flags', 'memoryChangeAddresses', 'memoryChangeValues',
+    'registers', 'cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of',
+    'memoryChangeAddresses', 'memoryChangeValues',
     'operandTypes', 'operandStrings', 'instructionAddressingMode',
     'instructionSegment', 'instructionOffset', 'instructionMnemonic', 'rawBytes'
   ],

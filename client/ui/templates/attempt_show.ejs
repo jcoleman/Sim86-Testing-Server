@@ -22,7 +22,14 @@
         <span>Errors by Type:</span>
         <ul>
           <li><span class="label">Registers:</span> <span class="attempt-error-registers"></span></li>
-          <li><span class="label">Flags:</span> <span class="attempt-error-flags"></span></li>
+          <li>
+            <span class="label">Flags:</span>
+            <ul>
+            <% ['cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of'].each(function (flag) { %>
+              <li><span class="label"><%= flag.toUpperCase() %> Flag</span> <span class="attempt-error-<%= flag %>"></span></li>
+            <% }) %>
+            </ul>
+          </li>
           <li><span class="label">Memory change addresses:</span> <span class="attempt-error-memoryChangeAddresses"></span></li>
           <li><span class="label">Memory change values:</span> <span class="attempt-error-memoryChangeValues"></span></li>
           <li><span class="label">Operand types:</span> <span class="attempt-error-operandTypes"></span></li>
