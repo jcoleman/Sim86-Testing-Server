@@ -27,7 +27,7 @@ this.ExecutionAttempt = {
   ],
   
   indexes: [
-    { user: 1, executionModuleId: 1 }
+    { userId: 1, executionModuleId: 1 }
   ],
   
   methods: {
