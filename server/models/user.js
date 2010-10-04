@@ -6,7 +6,8 @@ this.User = {
   ],
   
   indexes: [
-    [{'username': 1}, {unique: true}]
+    [{'username': 1}, {unique: true}],
+    [{'token': 1}, {unique: true}]
   ],
   
   methods: {
