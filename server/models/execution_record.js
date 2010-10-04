@@ -145,7 +145,7 @@ this.ExecutionRecord = {
           selfBytesLen = selfBytes.length, refBytesLen = refBytes.length;
       if (selfBytesLen != refBytesLen) {
         incorrect = true;
-        errors.rawBytes += Math.abs(selfBytesLen, refBytesLen);
+        errors.rawBytes += Math.abs(selfBytesLen - refBytesLen);
       }
       
       for (var i = 0, len = Math.min(selfBytesLen, refBytesLen); i < len; ++i) {
