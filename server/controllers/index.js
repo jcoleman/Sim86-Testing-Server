@@ -4,7 +4,7 @@ var controllers = {};
 
 this.initialize = function(includes) {
   ['Application', 'Home', 'ExecutionAttempt', 'ExecutionRecord',
-   'ExecutionModule', 'User'].each(function(name) {
+   'ExecutionModule', 'User', 'ModuleLoad'].each(function(name) {
     name += "Controller";
     var module = require('./' + name.underscore());
     var Class = includes.Prototype.Class;
@@ -75,6 +75,38 @@ var routes = {
       if (request.method == 'POST' || request.method == 'PUT') {
         route.options = {
           parsePOST: true,
+          collectBody: true
+        };
+      }
+      return route;
+    },
+    'load': function(request, additionalParameters) {
+      var route = {
+        controller: 'moduleLoad',
+        action: 'load',
+        options: {},
+        additionalParameters: additionalParameters
+      };
+      if (request.method == 'POST' || request.method == 'PUT') {
+        route.options = {
+          parseJSON: true,
+          collectBody: true
+        };
+      }
+      return route;
+    }
+  },
+  'load_attempt': {
+    'new': function(request, additionalParameters) {
+      var route = {
+        controller: 'moduleLoad',
+        action: 'new',
+        options: {},
+        additionalParameters: additionalParameters
+      };
+      if (request.method == 'POST' || request.method == 'PUT') {
+        route.options = {
+          parseJSON: true,
           collectBody: true
         };
       }
