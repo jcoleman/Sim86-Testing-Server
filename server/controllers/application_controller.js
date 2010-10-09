@@ -105,17 +105,8 @@ this.klass = {
                    text: this.DEFAULT_RESPONSES[options.contentType][options.errorCode] } );
   },
   
-  dispatch: function(action) {
-    if (this[action]) {
-      this.action = action;
-      this.executeFilterChain(action);
-    } else {
-      this.renderError({errorCode: this.NOT_FOUND});
-      this.finalize();
-    }
-  },
-  
   executeFilterChain: function(action) {
+    this.action = action;
     this.rendered = false;
     this.finalized = false;
     
