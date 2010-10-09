@@ -18,7 +18,6 @@ this.klass = {
           renderExecutionModule(existingExecutionModule);
         } else {
           var newExecutionModule = new self.Models.ExecutionModule(self.request.post);
-          newExecutionModule.token = self.SHA1.sha1Hash(filename + Math.random());
           newExecutionModule.save(function() {
             renderExecutionModule(newExecutionModule);
           });
