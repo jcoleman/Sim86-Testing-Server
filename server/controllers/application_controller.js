@@ -31,12 +31,12 @@ this.klass = {
     }
   },
   
-  beforeFilter: function(action) {
+  beforeFilter: function() {
     console.log("beforeFilter()");
     this.resume();
   },
   
-  afterFilter: function(action) {
+  afterFilter: function() {
     console.log("afterFilter()");
     this.resume();
   },
@@ -107,6 +107,7 @@ this.klass = {
   
   dispatch: function(action) {
     if (this[action]) {
+      this.action = action;
       this.executeFilterChain(action);
     } else {
       this.renderError({errorCode: this.NOT_FOUND});

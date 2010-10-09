@@ -6,7 +6,7 @@ this.klass = {
   
   defaultContentType: "JSON",
   
-  beforeFilter: function(action) {
+  beforeFilter: function() {
     var self = this;
     this.Models.User.find({token: this.request.json.token}).one(function (user) {
       if (user) {
