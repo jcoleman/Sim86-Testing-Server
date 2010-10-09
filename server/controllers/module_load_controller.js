@@ -18,7 +18,14 @@ this.klass = {
             self.module = module;
             self.resume();
           } else {
-            self.sendModuleNotFound(true);
+            if (self.action == 'load') {
+              self.module = new self.Models.ExecutionModule({filename: filename});
+              self.module.save(function() {
+                self.resume();
+              });
+            } else {
+              self.sendModuleNotFound(true);
+            }
           }
         });
       } else {
