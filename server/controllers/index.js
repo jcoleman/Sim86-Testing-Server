@@ -29,6 +29,7 @@ var routes = {
   },
   'attempt': {
     'new': {
+      methods: ['POST', 'PUT'],
       controller: 'executionAttempt',
       action: 'new',
       options: {
@@ -39,6 +40,7 @@ var routes = {
   },
   'execution': {
     'new': {
+      methods: ['POST', 'PUT'],
       controller: 'executionRecord',
       action: 'new',
       options: {
@@ -82,6 +84,7 @@ var routes = {
     },
     'load': function(request, additionalParameters) {
       var route = {
+        methods: ['POST', 'PUT'],
         controller: 'moduleLoad',
         action: 'load',
         options: {},
@@ -99,6 +102,7 @@ var routes = {
   'load_attempt': {
     'new': function(request, additionalParameters) {
       var route = {
+        methods: ['POST', 'PUT'],
         controller: 'moduleLoad',
         action: 'new',
         options: {},
@@ -118,6 +122,7 @@ var routes = {
 var findMatchingRoute = function(options) {
   var urlChunks = options.parsedUrl.pathname.split('/');
   
+  var request = options.request;
   var additionalParameters = {};
   var route = routes;
   var routeFound = true;
@@ -126,10 +131,11 @@ var findMatchingRoute = function(options) {
     route = route[chunk];
     
     if (Object.isFunction(route)) {
-      var route = route(options.request, additionalParameters);
-    } else if (route !== undefined) {
-      // Do nothing - a new route object was found
-    } else {
+      route = route(request, additionalParameters);
+    }
+    
+    if (route === undefined || (route.methods && !route.methods.include(request.method))) {
+      console.log("no route found");
       route = { controller: 'application' };
       routeFound = false;
     }
