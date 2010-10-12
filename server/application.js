@@ -55,6 +55,17 @@ var HTTP = require('http'),
 
 var server = HTTP.createServer(function(request, response) {
   var ip = request.connection.remoteAddress, url = request.url;
+  
+  request.on('error', function(exception) {
+    try {
+      response.end();
+    } catch (e) {
+      console.log("Could not finalize request in error handler... " + e);
+    }
+    
+    console.log("Exception encountered while handling request: " + exception + "\nStacktrace: " + exception.stack);
+  });
+  
   var deliverWithPaperboy = function() {
     Paperboy
       .deliver(ENVIRONMENT_CONFIG.root, request, response)
