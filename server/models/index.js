@@ -6,7 +6,7 @@ this.DB = DB;
 
 var self = this;
 ['User', 'ExecutionAttempt', 'ExecutionModule', 'ExecutionRecord',
- 'LoadedModule', 'ModuleLoadAttempt'].each(function(module) {
+ 'LoadedModule', 'ModuleLoadAttempt', 'ProjectPhase'].each(function(module) {
   console.log("Loading: " + module);
   Mongoose.model(module, require('./' + module.underscore())[module]);
   self[module] = DB.model(module);

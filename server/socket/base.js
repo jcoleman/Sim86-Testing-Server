@@ -85,7 +85,6 @@ this.onClientDisconnect = function(client) {
   var self = this;
   
   client.subscriptions.executionRecord.each(function (attemptId) {
-    sys.log('Cleaning up client subscription: ' + attemptId + ' for client ' + client);
     var message = { object: {attemptId: attemptId} };
     self.clientActionImplementations['unsubscribe.executionAttempt'].apply(self, [client, message]);
   });
@@ -110,11 +109,56 @@ this.clientActionImplementations = {
   },
   
   'retrieve.attempts': function(client, message) {
-    console.log('query: ' + JSON.stringify({userId: client.user._id}));
     this.Models.ExecutionAttempt.find({userId: client.user._id.toHexString()}, false).all(function (attempts) {
-      console.log('results: ' + JSON.stringify(attempts));
       message.reply(true, attempts);
     });
+  },
+  
+  'retrieve.phases': function(client, message) {
+    this.Models.ProjectPhase.find({}, false).all(function (phases) {
+      message.reply(true, phases);
+    });
+  },
+  
+  'delete.phase': function(client, message) {
+    console.log("removing: " + message.object.phaseId);
+    this.Models.ProjectPhase.find({_id: message.object.phaseId}).one(function (phase) {
+      if (phase) {
+        phase.remove(function() {
+          message.reply(true, {});
+        });
+      } else {
+        message.reply(false, {error: "Couldn't find phase"});
+      }
+    });
+  },
+  
+  'createOrUpdate.phase': function(client, message) {
+    var updateAndSave = function(phase) {
+      var object = message.object;
+      if (object._id) { delete object._id; }
+      
+      phase.name = object.name;
+      phase.dueDate = object.dueDate ? new Date(object.dueDate) : null;
+      phase.executionModules = object.executionModules || [];
+      
+      phase.save(function() {
+        message.reply(true, phase);
+      });
+    };
+    
+    if (message.object._id) {
+      this.Models.ProjectPhase.find({_id: message.object._id}).one(function (phase) {
+        if (phase) {
+          updateAndSave(phase);
+        } else {
+          message.reply(false, {error: "Couldn't find phase"});
+        }
+      });
+    } else {
+      console.log("creating new phase");
+      updateAndSave(new this.Models.ProjectPhase());
+    }
   },
   
   'retrieve.executionRecord': function(client, message) {

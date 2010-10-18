@@ -27,6 +27,10 @@ var routes = {
     controller: 'home',
     action: 'index'
   },
+  'admin': {
+    controller: 'home',
+    action: 'admin'
+  },
   'attempt': {
     'new': {
       methods: ['POST', 'PUT'],
