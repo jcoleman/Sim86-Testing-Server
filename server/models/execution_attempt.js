@@ -1,6 +1,7 @@
 this.ExecutionAttempt = {
   properties: [
     'userId',
+    'phaseId',
     'createdAt',
     'executionModuleId',
     'filename',
@@ -27,7 +28,8 @@ this.ExecutionAttempt = {
   ],
   
   indexes: [
-    { userId: 1, executionModuleId: 1 }
+    { userId: 1, executionModuleId: 1 },
+    { phaseId: 1 }
   ],
   
   methods: {

@@ -117,6 +117,12 @@ this.clientActionImplementations = {
     });
   },
   
+  'retrieve.attempts.byPhaseSubmission': function(client, message) {
+    this.Models.ExecutionAttempt.find({userId: client.user._id.toHexString(), phaseId: message.object.phaseId}, false).all(function (attempts) {
+      message.reply(true, attempts);
+    });
+  },
+  
   'retrieve.modules': function(client, message) {
     this.Models.ExecutionModule.find({}, false).all(function (modules) {
       message.reply(true, modules);
@@ -160,6 +166,20 @@ this.clientActionImplementations = {
     } else {
       updateAndSave(new this.Models.ProjectPhase());
     }
+  },
+  
+  'submit.attempt.forPhase': function(client, message) {
+    var object = message.object;
+    this.Models.ExecutionAttempt.find({userId: client.user._id.toHexString(), _id: object.attemptId}).one(function(attempt) {
+      if (attempt) {
+        attempt.phaseId = object.phaseId;
+        attempt.save(function() {
+          message.reply(true, {attempt: attempt});
+        });
+      } else {
+        message.reply(false, {error:'Attempt not found for user'});
+      }
+    });
   },
   
   'retrieve.executionRecord': function(client, message) {
