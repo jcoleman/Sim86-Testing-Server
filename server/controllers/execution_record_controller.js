@@ -8,7 +8,6 @@ this.klass = {
   
   'new': function() {
     var self = this;
-    console.log('complete body: ' + this.request.completeBody);
     
     if (this.request.json.attemptId) {
       this.Models.ExecutionAttempt.find({_id: this.request.json.attemptId}).one(function(attempt) {

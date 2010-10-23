@@ -194,15 +194,12 @@ this.dispatchToController = function(options) {
   
   if (routing.found) {
     if (route.options && route.options.collectBody) {
-      console.log('collecting body');
       var chunks = [];
       options.request.addListener('end', function() {
-        console.log('listen end');
         options.request.completeBody = chunks.join('');
         createAndExecuteControllerInstanceForRoute(routing, options);
       });
       options.request.addListener('data', function(data) {
-        console.log('listen data');
         chunks.push(data);
       });
     } else {

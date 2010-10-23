@@ -7,8 +7,6 @@ this.extensions = [];
 this.klass = {
   
   initialize: function(options, routeOptions) {
-    console.log("Instantiating controller");
-    
     this.request = options.request;
     this.response = options.response;
     this.options = options;
@@ -32,17 +30,14 @@ this.klass = {
   },
   
   beforeFilter: function() {
-    console.log("beforeFilter()");
     this.resume();
   },
   
   afterFilter: function() {
-    console.log("afterFilter()");
     this.resume();
   },
   
   finalize: function() {
-    console.log("finalize()");
     this.finalized = true;
     this.response.end();
   },
@@ -52,8 +47,6 @@ this.klass = {
   render: function(options) {
     if (this.rendered) { throw new Error("Cannot render more than once."); }
     this.rendered = true;
-    
-    console.log("render()");
     
     if (!options.status) { options.status = this.SUCCESS; }
     options.contentType = options.contentType || this.defaultContentType;

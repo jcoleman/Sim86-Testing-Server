@@ -54,8 +54,6 @@ this.onClientMessage = function(client, message) {
     client.sendObject({responseId: message.replyId, success: success, object: object});
   };
   
-  console.log('Received message: ' + JSON.stringify(message));
-  
   try {
     message = JSON.parse(message);
     message.reply = reply;
@@ -64,8 +62,6 @@ this.onClientMessage = function(client, message) {
     return;
   }
   
-  console.log('Executing action: ' + message.action);
-  
   var action = this.clientActionImplementations[message.action];
   if (action) {
     try {
@@ -73,6 +69,7 @@ this.onClientMessage = function(client, message) {
       action.apply(this, [client, message]);
     } catch (e) {
       // Error executing action
+      console.log('Exception occurred during action [' + message.action + '] execution: ' + e + '\n' + e.stack);
       message.reply(true, {error: 'Exception occurred during action execution', e: e});
     }
   } else {
@@ -127,7 +124,6 @@ this.clientActionImplementations = {
   },
   
   'delete.phase': function(client, message) {
-    console.log("removing: " + message.object.phaseId);
     this.Models.ProjectPhase.find({_id: message.object.phaseId}).one(function (phase) {
       if (phase) {
         phase.remove(function() {
@@ -162,7 +158,6 @@ this.clientActionImplementations = {
         }
       });
     } else {
-      console.log("creating new phase");
       updateAndSave(new this.Models.ProjectPhase());
     }
   },
@@ -186,7 +181,7 @@ this.clientActionImplementations = {
               message.reply(true, { record: record,
                                     reference: _referenceRecord });
             } catch (e) {
-              require('sys').log("Exception occurred try to reply with execution record: " + e);
+              console.log("Exception occurred try to reply with execution record: " + e);
             }
           };
           
@@ -212,8 +207,6 @@ this.clientActionImplementations = {
   },
   
   'subscribe.executionAttempt': function(client, message) {
-    require('sys').log("Subscribing to feed: executionAttempt with subscription id: " + message.object.attemptId);
-    
     var attemptId = message.object.attemptId;
     var subscriptions = this.subscriptions.executionRecord;
     if (!subscriptions[attemptId]) {
@@ -251,7 +244,6 @@ this.clientActionImplementations = {
 this.publishEvent = function(feed, subscriptionIdentifier, object) {
   var feedSubscriptions = this.subscriptions[feed];
   if (feedSubscriptions && feedSubscriptions[subscriptionIdentifier]) {
-    require('sys').log("Publishing to feed: " + feed + " with subscription id: " + subscriptionIdentifier);
     feedSubscriptions[subscriptionIdentifier].each(function (subscription) {
       subscription.client.sendObject({ action: 'feed.' + feed,
                                        subscriptionIdentifier: subscriptionIdentifier,
@@ -260,7 +252,6 @@ this.publishEvent = function(feed, subscriptionIdentifier, object) {
     
     return true;
   } else {
-    require('sys').log("Unable to publish to feed: " + feed + " with subscription id: " + subscriptionIdentifier);
     return false;
   }
 }.bind(this);
