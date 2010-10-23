@@ -70,6 +70,17 @@ Sim.UI.Admin.PhaseManagementController = Class.create(Sim.UI.Controller, {
     
   },
   
+  destroy: function($super) {
+    if (this.phaseListController) {
+      this.phaseListController.destroy();
+      delete this.phaseListController;
+    }
+    if (this.currentPhaseEditor) {
+      this.currentPhaseEditor.destroy();
+      delete this.currentPhaseEditor;
+    }
+  },
+  
   getTemplatePath: function() {
     return 'admin_phase_management';
   }
