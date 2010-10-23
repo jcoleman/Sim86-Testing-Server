@@ -61,6 +61,8 @@ Sim.UI.Attempt.ShowController = Class.create(Sim.UI.Controller, {
       }, [['count', 1]]);
       event.stop();
     });
+    
+    this.updateAttemptDetails(this.attempt);
   },
   
   initializeExecutionDisplay: function() {
