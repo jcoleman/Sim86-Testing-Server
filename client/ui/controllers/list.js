@@ -60,11 +60,11 @@ Sim.UI.ListController = Class.create(Sim.UI.Controller, {
   
   destroy: function($super) {
     var self = this;
-    Object.keys(this.itemElementHash).each(function(item) {
-      self.removeItem(item);
+    this.itemElements.each(function(desc) {
+      self.removeItem(desc.item);
     });
     
-    this.itemElementHash = {};
+    this.itemElements = [];
     
     $super();
   }
