@@ -1,0 +1,64 @@
+<% var requiredModules = phase.executionModules.sortBy(function(it) { return it.filename; }); %>
+
+<% Object.keys(phaseSubmissionDescriptor.users)
+         .sortBy(function (it) { return phaseSubmissionDescriptor.users[it].username; })
+         .each(function (userId) { %>
+  <% var user = phaseSubmissionDescriptor.users[userId]; %>
+  <p><%= user.username %></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Filename</th>
+        <th>Completion %</th>
+        <th>Correct %</th>
+        <th>Instruction Count</th>
+        <th>Correct Count</th>
+        <th>Mnemonic Errors</th>
+        <th>Addr. Mode Errors</th>
+        <th>Instr. Raw Bytes Errors</th>
+        <th>Instr. Seg. Errors</th>
+        <th>Instr. Offset Errors</th>
+        <th>Operand Type Errors</th>
+        <th>Operand String Errors</th>
+        <th>Register Errors</th>
+        <% ['zf', 'cf', 'of', 'sf', 'if', 'pf', 'af', 'df', 'tf'].each(function(flag) { %>
+          <th><%= flag.toUpperCase() %> Errors</th>
+        <% }) %>
+        <th>Mem. Change Value Errors</th>
+        <th>Mem. Change Addr. Errors</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% requiredModules.each(function(module) { %>
+        <tr>
+          <% var attempt = phaseSubmissionDescriptor.usersAttempts[user._id][module.executionModuleId]; %>
+          <% if (attempt) { %>
+            <% var systemAttempt = phaseSubmissionDescriptor.systemAttempts[module.executionModuleId]; %>
+            <% var errors = attempt.errorsByType; %>
+            <td><%= attempt.filename %></td>
+            <td><%= systemAttempt ? attempt.recordCount / systemAttempt.recordCount : null %></td>
+            <td><%= systemAttempt ? attempt.correctCount / systemAttempt.recordCount : null %></td>
+            <td><%= attempt.recordCount %></td>
+            <td><%= attempt.correctCount %></td>
+            <td><%= errors.instructionMnemoic %></td>
+            <td><%= errors.instructionAddressingMode %></td>
+            <td><%= errors.rawBytes %></td>
+            <td><%= errors.instructionSegment %></td>
+            <td><%= errors.instructionOffset %></td>
+            <td><%= errors.operandTypes %></td>
+            <td><%= errors.operandStrings %></td>
+            <td><%= errors.registers %></td>
+            <% ['zf', 'cf', 'of', 'sf', 'if', 'pf', 'af', 'df', 'tf'].each(function(flag) { %>
+              <td><%= errors[flag] %></td>
+            <% }) %>
+            <td><%= errors.memoryChangeValues %></td>
+            <td><%= errors.memoryChangeAddresses %></td>
+          <% } else { %>
+            <td><%= module.filename %></td>
+            <td>0%</td>
+          <% } %>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% }) %>

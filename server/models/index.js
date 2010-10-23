@@ -16,9 +16,9 @@ this.User.find({username: 'system'}).one(function(user) {
   self.User.system = user;
 });
 
-this.User.__systemModuleAttempts = {};
-this.User.getSystemAttemptForModule = function(moduleId, callback) {
-  var attempt = self.User.__systemModuleAttempts[moduleId];
+this.ExecutionAttempt.__systemModuleAttempts = {};
+this.ExecutionAttempt.getSystemAttemptForModule = function(moduleId, callback) {
+  var attempt = self.ExecutionAttempt.__systemModuleAttempts[moduleId];
   if (attempt) {
     callback(attempt);
   } else {
@@ -27,7 +27,7 @@ this.User.getSystemAttemptForModule = function(moduleId, callback) {
       executionModuleId: moduleId
     }).last(function(attempt) {
       if (attempt) {
-        self.User.__systemModuleAttempts[attempt.id()] = attempt;
+        self.ExecutionAttempt.__systemModuleAttempts[attempt.id()] = attempt;
       }
       
       callback(attempt);

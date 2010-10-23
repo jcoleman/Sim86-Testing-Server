@@ -1,5 +1,6 @@
 //= require "../application"
 //= require "phase_management"
+//= require "student_submission"
 //= require "base"
 
 Sim.UI.Admin.ApplicationController = Class.create(Sim.UI.ApplicationController, {
@@ -44,7 +45,7 @@ Sim.UI.Admin.ApplicationController = Class.create(Sim.UI.ApplicationController, 
   
   adminOptions: {
     "Phase Management": Sim.UI.Admin.PhaseManagementController,
-    "Student Submissions": null,
+    "Student Submissions": Sim.UI.Admin.StudentSubmissionViewController,
     "System": null
   },
   

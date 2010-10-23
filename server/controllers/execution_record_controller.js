@@ -20,7 +20,9 @@ this.klass = {
         structureErrors.push('`object.instruction` was either not found or not a map.');
       } else {
         var instruction = object.instruction;
-        if (instruction.operands === null || instruction.operands === undefined || !Object.isArray(instruction.operands)) {
+        if (instruction.operands === null) {
+          instruction.operands = [];
+        } else if (instruction.operands === undefined || !Object.isArray(instruction.operands)) {
           structureErrors.push('`object.instruction.operands` was either not found or not an array.');
         } else {
           var operands = instruction.operands;
@@ -40,7 +42,9 @@ this.klass = {
         structureErrors.push('`object.memory` was either not found or not a map.');
       } else {
         var memory = object.memory;
-        if (memory.changes === null || memory.changes === undefined || !Object.isArray(memory.changes)) {
+        if (memory.changes === null) {
+          memory.changes = [];
+        } else if (memory.changes === undefined || !Object.isArray(memory.changes)) {
           structureErrors.push('`object.memory.changes` was either not found or not an array.');
         } else {
           var changes = memory.changes;
@@ -104,7 +108,7 @@ this.klass = {
   _findReferenceAndUpdateAttempt: function(record, attempt, callback) {
     var self = this;
     
-    this.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
+    this.Models.ExecutionAttempt.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
       if (systemAttempt) {
         var finder = { attemptId: systemAttempt.id(), count: record.count };
         self.Models.ExecutionRecord.find(finder, false).one(function (reference) {

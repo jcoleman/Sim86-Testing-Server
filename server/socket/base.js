@@ -123,6 +123,61 @@ this.clientActionImplementations = {
     });
   },
   
+  'retrieve.attempts.admin.byPhaseSubmission': function(client, message) {
+    var self = this;
+    this.Models.ExecutionAttempt.find({phaseId: message.object.phaseId}, false).all(function (attempts) {
+      var usersAttempts = {}, systemAttempts = {}, users = {};
+      
+      attempts.each(function(attempt) {
+        var userAttempts = usersAttempts[attempt.userId];
+        if (!userAttempts) {
+          usersAttempts[attempt.userId] = userAttempts = {};
+        }
+        userAttempts[attempt.executionModuleId] = attempt;
+      });
+      
+      var moduleIds = attempts.collect(function (it) { return it.executionModuleId; }).uniq(),
+          systemAttemptCount = 0,
+          expectedSystemAttemptCount = moduleIds.length,
+          userIds = attempts.collect(function (it) { return it.userId.toString(); }).uniq(),
+          userCount = 0,
+          expectedUserCount = userIds.length;
+      
+      
+      var replyWithSuccessIfReady = function() {
+        if (userCount == expectedUserCount && systemAttemptCount == expectedSystemAttemptCount) {
+          message.reply(true, {
+            systemAttempts: systemAttempts,
+            usersAttempts: usersAttempts,
+            users: users
+          });
+        }
+      };
+      
+      
+      if (moduleIds.length > 0) {
+        userIds.each(function (userId) {
+          self.Models.User.find({_id: userId}, false).one(function(user) {
+            ++userCount;
+            users[user._id.toHexString()] = user;
+            replyWithSuccessIfReady();
+          });
+        });
+        
+        moduleIds.each(function(moduleId) {
+          self.Models.ExecutionAttempt.getSystemAttemptForModule(moduleId, function (systemAttempt) {
+            systemAttempts[moduleId] = systemAttempt;
+            ++systemAttemptCount;
+            replyWithSuccessIfReady();
+          });
+        });
+      } else {
+        message.reply(false, {});
+      }
+      
+    });
+  },
+  
   'retrieve.modules': function(client, message) {
     this.Models.ExecutionModule.find({}, false).all(function (modules) {
       message.reply(true, modules);
@@ -206,7 +261,7 @@ this.clientActionImplementations = {
           };
           
           if (record) {
-            self.Models.User.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
+            self.Models.ExecutionAttempt.getSystemAttemptForModule(attempt.executionModuleId, function (systemAttempt) {
               if (systemAttempt) {
                 self.Models.ExecutionRecord.find({
                   attemptId: systemAttempt.id(),
