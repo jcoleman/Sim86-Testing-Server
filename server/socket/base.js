@@ -120,6 +120,12 @@ this.clientActionImplementations = {
     });
   },
   
+  'retrieve.modules': function(client, message) {
+    this.Models.ExecutionModule.find({}, false).all(function (modules) {
+      message.reply(true, modules);
+    });
+  },
+  
   'delete.phase': function(client, message) {
     console.log("removing: " + message.object.phaseId);
     this.Models.ProjectPhase.find({_id: message.object.phaseId}).one(function (phase) {
