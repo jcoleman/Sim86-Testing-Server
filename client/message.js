@@ -26,6 +26,10 @@ Sim.Messenger = {
       Sim.Messenger.callbacks[message.replyId] = callback;
     }
     
+    if (responseId) {
+      Sim.Messenger._fireCallbackFor(message);
+    }
+    
     console.log('Sending message', action, message.replyId, object);
     Sim.Messenger._emitToReceivers(message);
     
