@@ -7,7 +7,9 @@ Sim.Messenger = {
   
   initialize: function(callbacks) {
     io.setPath('/io/');
-    Sim.Messenger.socket = new io.Socket();
+    Sim.Messenger.socket = new io.Socket(undefined, {
+      transports: ['websocket', 'htmlfile', 'xhr-multipart', 'xhr-polling']
+    });
     Sim.Messenger.socket.connect();
     Sim.Messenger.socket.on('message', Sim.Messenger._processRemoteMessage);
     Sim.Messenger.socket.on('disconnect', function() {
