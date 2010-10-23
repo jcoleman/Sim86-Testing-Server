@@ -17,7 +17,7 @@ Sim.UI.ListController = Class.create(Sim.UI.Controller, {
     
     var self = this;
     
-    this.itemElementHash = {};
+    this.itemElements = [];
     
     this.retrieveItems(function(items) {
       console.log("retrieve items returned", items);
@@ -34,10 +34,8 @@ Sim.UI.ListController = Class.create(Sim.UI.Controller, {
       locals: {item: item}
     });
     
-    console.log("inserting", el, "into", this.listParent);
-    
     this.listParent.insert({bottom: el});
-    this.itemElementHash[item] = el;
+    this.itemElements.push({item: item, el: el});
     
     if (this.onItemRender) {
       this.onItemRender(el, item);
@@ -49,9 +47,10 @@ Sim.UI.ListController = Class.create(Sim.UI.Controller, {
       this.onItemRemove(item)
     }
     
-    var el = this.itemElementHash[item];
-    if (el) {
-      el.remove();
+    var desc = this.itemElements.find(function(it) { return it.item === item; });
+    if (desc) {
+      desc.el.remove();
+      this.itemElements = this.itemElements.without(desc);
     }
   },
   
