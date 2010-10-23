@@ -138,7 +138,10 @@ var findMatchingRoute = function(options) {
       route = route(request, additionalParameters);
     }
     
-    if (route === undefined || (route.methods && !route.methods.include(request.method))) {
+    if ( route === undefined
+         || !route.controller
+         || !route.action
+         || (route.methods && !route.methods.include(request.method)) ) {
       console.log("no route found");
       route = { controller: 'application' };
       routeFound = false;
