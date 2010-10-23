@@ -1,7 +1,7 @@
 .application-top-level {
 }
 
-.horizontal-container>div {
+.horizontal-container>div, .horizontal-container>ul {
   vertical-align: top;
   display: inline-block;
 }
