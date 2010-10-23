@@ -25,7 +25,13 @@ Sim.UI.Admin.ApplicationController = Class.create(Sim.UI.ApplicationController, 
               self.currentAdminPane.destroy();
             }
             
-            self.currentAdminPane = new self.adminOptions[item](self.grab('.admin-editor'));
+            var adminPaneKlass = self.adminOptions[item];
+            if (adminPaneKlass) {
+              self.currentAdminPane = new adminPaneKlass(self.grab('.admin-editor'));
+            } else {
+              self.currentAdminPane = null;
+            }
+            
             event.stop();
           });
         }
@@ -38,12 +44,8 @@ Sim.UI.Admin.ApplicationController = Class.create(Sim.UI.ApplicationController, 
   
   adminOptions: {
     "Phase Management": Sim.UI.Admin.PhaseManagementController,
-    "Student Submissions": function() {
-      
-    },
-    "System": function() {
-      
-    }
+    "Student Submissions": null,
+    "System": null
   },
   
   getTemplatePath: function() {
