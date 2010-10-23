@@ -5,12 +5,13 @@ Sim.UI.Controller = Class.create({
   initialize: function(container) {
     var self = this;
     this.container = container;
-    this.render();
     if (this.beforeBind) {
       this.beforeBind(function() {
+        self.render();
         self.bind();
       });
     } else {
+      this.render();
       this.bind();
     }
   },
