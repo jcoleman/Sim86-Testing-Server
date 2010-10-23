@@ -11,11 +11,11 @@ this.klass = {
     
     // Verify data structure...
     var json = this.request.json;
+    var object = json.object_ || json.object;
     var structureErrors = [];
-    if (!json.object || json.object.toString() !== '[object Object]') {
-      structureErrors.push('`object` was either not found or not a map.');
+    if (!object || object.toString() !== '[object Object]') {
+      structureErrors.push('`object_` was either not found or not a map.');
     } else {
-      var object = json.object;
       if (!object.instruction || object.instruction.toString() !== '[object Object]') {
         structureErrors.push('`object.instruction` was either not found or not a map.');
       } else {
@@ -27,6 +27,7 @@ this.klass = {
         } else {
           var operands = instruction.operands;
           for (var i, len = operands.length; i < len; ++i) {
+            operands[i].string = operands[i].string_ || operands[i].string;
             if (!operands[i] || operands[i].toString() !== '[object Object]') {
               structureErrors.push('`object.instruction.operands[' + i + ']` was either not found or not a map.');
             }
