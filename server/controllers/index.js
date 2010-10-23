@@ -138,14 +138,16 @@ var findMatchingRoute = function(options) {
       route = route(request, additionalParameters);
     }
     
-    if ( route === undefined
-         || !route.controller
-         || !route.action
-         || (route.methods && !route.methods.include(request.method)) ) {
-      console.log("no route found");
-      route = { controller: 'application' };
-      routeFound = false;
-    }
+    if (!route) { break; }
+  }
+  
+  if ( route === undefined
+       || !route.controller
+       || !route.action
+       || (route.methods && !route.methods.include(request.method)) ) {
+    console.log('Route not found');
+    route = { controller: 'application' };
+    routeFound = false;
   }
   
   route.additionalParameters = Object.extend(route.additionalParameters || {}, additionalParameters);
