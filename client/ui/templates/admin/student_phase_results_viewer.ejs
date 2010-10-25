@@ -36,8 +36,8 @@
             <% var systemAttempt = phaseSubmissionDescriptor.systemAttempts[module.executionModuleId]; %>
             <% var errors = attempt.errorsByType; %>
             <td><%= attempt.filename %></td>
-            <td><%= systemAttempt ? attempt.recordCount / systemAttempt.recordCount : null %></td>
-            <td><%= systemAttempt ? attempt.correctCount / systemAttempt.recordCount : null %></td>
+            <td><%= systemAttempt ? (attempt.recordCount / systemAttempt.recordCount) * 100 : "N/A" %>%</td>
+            <td><%= systemAttempt ? (attempt.correctCount / systemAttempt.recordCount) * 100 : "N/A" %>%</td>
             <td><%= attempt.recordCount %></td>
             <td><%= attempt.correctCount %></td>
             <td><%= errors.instructionMnemoic %></td>
