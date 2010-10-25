@@ -166,7 +166,7 @@ this.clientActionImplementations = {
         
         moduleIds.each(function(moduleId) {
           self.Models.ExecutionAttempt.getSystemAttemptForModule(moduleId, function (systemAttempt) {
-            systemAttempts[moduleId] = systemAttempt;
+            systemAttempts[moduleId] = systemAttempt ? systemAttempt.__doc : null;
             ++systemAttemptCount;
             replyWithSuccessIfReady();
           });
