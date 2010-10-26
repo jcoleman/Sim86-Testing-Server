@@ -26,7 +26,7 @@ this.klass = {
           structureErrors.push('`object.instruction.operands` was either not found or not an array.');
         } else {
           var operands = instruction.operands;
-          for (var i, len = operands.length; i < len; ++i) {
+          for (var i = 0, len = operands.length; i < len; ++i) {
             operands[i].string = operands[i].string_ || operands[i].string || "";
             if (!operands[i] || operands[i].toString() !== '[object Object]') {
               structureErrors.push('`object.instruction.operands[' + i + ']` was either not found or not a map.');
@@ -49,7 +49,7 @@ this.klass = {
           structureErrors.push('`object.memory.changes` was either not found or not an array.');
         } else {
           var changes = memory.changes;
-          for (var i, len = changes.length; i < len; ++i) {
+          for (var i = 0, len = changes.length; i < len; ++i) {
             if (!changes[i] || changes[i].toString() !== '[object Object]') {
               structureErrors.push('`object.memory.changes[' + i + ']` was either not found or not a map.');
             }
