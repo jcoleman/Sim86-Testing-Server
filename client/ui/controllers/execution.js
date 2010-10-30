@@ -49,6 +49,12 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
         return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value:</span> " + change.value + "</li>";
       }) + "</ul>"
     );
+    
+    elements.instructionOperandsElement.update(
+      "<ul>" + reference.instruction.operands.inject("", function (html, op) {
+        return html + "<li><span>Type:</span> " + op.type + "<br/><span>String:</span> " + op.string + "</li>";
+      }) + "</ul>"
+    );
   },
   
   updateRecordDisplay: function(record, reference) {
@@ -94,7 +100,25 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     
     elements.memoryChangesElement.update(
       "<ul>" + record.memory.changes.inject("", function (html, change) {
-        return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value:</span> " + change.value + "</li>";
+        var correctAddress = !!reference.memory.changes.find(function(ref) {
+          return ref.address == change.address;
+        });
+        var correctValue = !!reference.memory.changes.find(function(ref) {
+          return ref.value == change.value;
+        });
+        return html + "<li><span>Address:</span> <span class='" + (correctAddress ? "" : "record-incorrect") + "'>" + change.address + "</span><br/><span>Value:</span> <span class='" + (correctValue ? "" : "record-incorrect") + "'>" + change.value + "</span></li>";
+      }) + "</ul>"
+    );
+    
+    elements.instructionOperandsElement.update(
+      "<ul>" + record.instruction.operands.inject("", function (html, op) {
+        var correctType = !!reference.instruction.operands.find(function(ref) {
+          return ref.type == op.type;
+        });
+        var correctString = !!reference.instruction.operands.find(function(ref) {
+          return ref.string == op.string;
+        });
+        return html + "<li><span>Type:</span> <span class='" + (correctType ? "" : "record-incorrect") + "'>" + op.type + "</span><br/><span>String:</span> <span class='" + (correctString ? "" : "record-incorrect") + "'>" + op.string + "</span></li>";
       }) + "</ul>"
     );
   },
@@ -125,6 +149,8 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       });
       
       elements.memoryChangesElement = self.grab('.' + type + '-memory-changes');
+      
+      elements.instructionOperandsElement = self.grab('.' + type + '-instruction-operands');
     });
   },
   
