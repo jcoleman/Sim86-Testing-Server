@@ -21,8 +21,9 @@ Sim.UI.Admin.PhaseEditorController = Class.create(Sim.UI.Controller, {
     dueDateInput.observe('blur', function() {
       try {
         var val = dueDateInput.getValue();
-        self.phase.dueDate = val ? new Date(val) : null;
-        dueDateInput.setValue(new Date(val));
+        var date = Date.parse(val);
+        self.phase.dueDate = val ? date : null;
+        dueDateInput.setValue(date.toString("h:mm M/d/yyyy"));
       } catch (e) {
         alert("Unable to parse due date");
         self.phase.dueDate = null;

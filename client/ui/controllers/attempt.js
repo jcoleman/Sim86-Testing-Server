@@ -176,7 +176,11 @@ Sim.UI.Attempt.ListController = Class.create(Sim.UI.Controller, {
     var self = this;
     var parent = this.grab('.attempt-list');
     Sim.Messenger.sendRemote('retrieve.attempts', {}, function (message) {
-      message.object.reverse().each(function (attempt) {
+      message.object.each(function (it) {
+        it.createdAt = Date.parse(it.createdAt.substring(0, 19));
+      });
+      
+      message.object.sortBy(function (it) { return it.createdAt; }).reverse().each(function (attempt) {
         var el = self.renderTemplateIntoElement({
           template: 'attempt_link',
           tag: 'li',
