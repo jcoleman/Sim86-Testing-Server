@@ -6,6 +6,8 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
   
   initialize: function($super, container, options) {
     this.instructionKeys = ['addressingMode', 'mnemonic', 'segment', 'offset'];
+    this.instructionStringKeys = ['addressingMode', 'mnemonic'];
+    this.instructionNumberKeys = ['segment', 'offset'];
     
     this.flagNames = ['cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of'];
     this.registerNames = ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'];
@@ -33,12 +35,16 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     var elements = this.referenceElements;
     
     this.registerNames.each(function (register, index) {
-      elements.registerElements[index].update(reference.registers[register]);
+      elements.registerElements[index].update(hex(reference.registers[register]));
     });
     
-    this.instructionKeys.each(function (key) {
+    this.instructionStringKeys.each(function (key) {
       elements.instructionElements[key].update(reference.instruction[key]);
     });
+    this.instructionNumberKeys.each(function (key) {
+      elements.instructionElements[key].update(hex(reference.instruction[key]));
+    });
+    
     
     this.flagNames.each(function (key) {
       elements.flagElements[key].update(reference.computedFlags[key] ? 'ON' : 'OFF');
@@ -46,7 +52,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     
     elements.memoryChangesElement.update(
       "<ul>" + reference.memory.changes.inject("", function (html, change) {
-        return html + "<li><span>Address:</span> " + change.address + "<br/><span>Value:</span> " + change.value + "</li>";
+        return html + "<li><span>Address:</span> " + hex(change.address, true) + "<br/><span>Value:</span> " + hex(change.value) + "</li>";
       }) + "</ul>"
     );
     
@@ -65,7 +71,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     this.registerNames.each(function (register, index) {
       var newValue = record.registers[register];
       var element = elements.registerElements[index];
-      element.update(newValue);
+      element.update(hex(newValue));
       
       if (newValue != reference.registers[register]) {
         element.addClassName('record-incorrect');
@@ -74,10 +80,21 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       }
     });
     
-    this.instructionKeys.each(function (key) {
+    this.instructionStringKeys.each(function (key) {
       var newValue = record.instruction[key];
       var element = elements.instructionElements[key];
       element.update(newValue);
+      
+      if (newValue != reference.instruction[key]) {
+        element.addClassName('record-incorrect');
+      } else {
+        element.removeClassName('record-incorrect');
+      }
+    });
+    this.instructionNumberKeys.each(function (key) {
+      var newValue = record.instruction[key];
+      var element = elements.instructionElements[key];
+      element.update(hex(newValue));
       
       if (newValue != reference.instruction[key]) {
         element.addClassName('record-incorrect');
@@ -106,7 +123,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
         var correctValue = !!reference.memory.changes.find(function(ref) {
           return ref.value == change.value;
         });
-        return html + "<li><span>Address:</span> <span class='" + (correctAddress ? "" : "record-incorrect") + "'>" + change.address + "</span><br/><span>Value:</span> <span class='" + (correctValue ? "" : "record-incorrect") + "'>" + change.value + "</span></li>";
+        return html + "<li><span>Address:</span> <span class='" + (correctAddress ? "" : "record-incorrect") + "'>" + hex(change.address, true) + "</span><br/><span>Value:</span> <span class='" + (correctValue ? "" : "record-incorrect") + "'>" + hex(change.value) + "</span></li>";
       }) + "</ul>"
     );
     
