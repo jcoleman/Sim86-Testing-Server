@@ -79,6 +79,8 @@ Sim.UI.Admin.PhaseManagementController = Class.create(Sim.UI.Controller, {
       this.currentPhaseEditor.destroy();
       delete this.currentPhaseEditor;
     }
+    
+    $super();
   },
   
   getTemplatePath: function() {
