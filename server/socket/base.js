@@ -123,6 +123,45 @@ this.clientActionImplementations = {
     });
   },
   
+  'retrieve.attempts.admin.byStudent': function(client, message) {
+    var self = this;
+    this.Models.ExecutionAttempt.find({}, false).all(function (attempts) {
+      var usersAttempts = {}, users = {};
+      
+      attempts.each(function(attempt) {
+        var userAttempts = usersAttempts[attempt.userId];
+        if (!userAttempts) {
+          usersAttempts[attempt.userId] = userAttempts = {};
+        }
+        userAttempts[attempt.executionModuleId] = attempt;
+      });
+      
+      var userIds = attempts.collect(function (it) { return it.userId.toString(); }).uniq(),
+          userCount = 0,
+          expectedUserCount = userIds.length;
+      
+      
+      var replyWithSuccessIfReady = function() {
+        if (userCount == expectedUserCount) {
+          message.reply(true, {
+            usersAttempts: usersAttempts,
+            users: users
+          });
+        }
+      };
+      
+      
+      userIds.each(function (userId) {
+        self.Models.User.find({_id: userId}, false).one(function(user) {
+          ++userCount;
+          users[user._id.toHexString()] = user;
+          replyWithSuccessIfReady();
+        });
+      });
+      
+    });
+  },
+  
   'retrieve.attempts.admin.byPhaseSubmission': function(client, message) {
     var self = this;
     this.Models.ExecutionAttempt.find({phaseId: message.object.phaseId}, false).all(function (attempts) {

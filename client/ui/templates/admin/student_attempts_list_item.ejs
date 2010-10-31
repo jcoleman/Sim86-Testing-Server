@@ -1,0 +1,9 @@
+<div>
+  <h3><%= item.user.username %></h3>
+  <% var filenames = Object.keys(item.attempts).collect(function (attemptId) { return item.attempts[attemptId].filename; }).sort(); %>
+  <ul>
+  <% filenames.each(function(filename) { %>
+    <li><%= filename %></li>
+  <% }) %>
+  <ul>
+</div>

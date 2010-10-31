@@ -56,6 +56,15 @@ Sim.UI.Admin.StudentSubmissionViewController = Class.create(Sim.UI.Controller, {
     });
   },
   
+  destroy: function($super) {
+    if (this.phaseListController) {
+      this.phaseListController.destroy();
+    }
+    delete this.phaseListController;
+    
+    $super();
+  },
+  
   getTemplatePath: function() {
     return 'admin_student_submission';
   }
