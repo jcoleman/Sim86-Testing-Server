@@ -27,9 +27,10 @@ this.klass = {
         } else {
           var operands = instruction.operands;
           for (var i = 0, len = operands.length; i < len; ++i) {
-            operands[i].string = operands[i].string_ || operands[i].string || "";
             if (!operands[i] || operands[i].toString() !== '[object Object]') {
-              structureErrors.push('`object.instruction.operands[' + i + ']` was either not found or not a map.');
+              structureErrors.push('`object.instruction.operands[' + i + ']` was either null, undefined, or not an object.');
+            } else {
+              operands[i].string = operands[i].string_ || operands[i].string || "";
             }
           }
         }
