@@ -63,7 +63,8 @@ this.klass = {
       this.render({ json: {status: "INVALID_OBJECT_STRUCTURE", errors: structureErrors} });
       this.resume();
     } else {
-      if (this.request.json.attemptId) {
+      var attemptId = this.request.json.attemptId;
+      if (attemptId && attemptId.length && attemptId.length <= 24) {
         this.Models.ExecutionAttempt.find({_id: this.request.json.attemptId}).one(function(attempt) {
           if (attempt) {
             self._savePostedRecordForAttempt(attempt);
