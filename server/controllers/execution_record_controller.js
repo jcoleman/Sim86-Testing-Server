@@ -31,6 +31,7 @@ this.klass = {
               structureErrors.push('`object.instruction.operands[' + i + ']` was either null, undefined, or not an object.');
             } else {
               operands[i].string = operands[i].string_ || operands[i].string || "";
+              operands[i].type = operands[i].type || "";
             }
           }
         }
