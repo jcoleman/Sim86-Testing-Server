@@ -35,6 +35,12 @@ this.klass = {
             }
           }
         }
+        
+        if (instruction.rawBytes === null) {
+          instruction.rawBytes = [];
+        } else if (instruction.rawBytes === undefined || !Object.isArray(instruction.rawBytes)) {
+          structureErrors.push('`object.instruction.rawBytes` was either not found or not an array.');
+        }
       }
       
       if (!object.registers || object.registers.toString() !== '[object Object]') {
