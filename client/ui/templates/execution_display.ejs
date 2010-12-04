@@ -37,7 +37,7 @@
     
     <span>Registers:</span>
     <ul>
-      <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
+      <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'bp', 'sp'].each(function(register) { %>
       <li>
         <span class="label"><%= register.toUpperCase() %> Register:</span> <span class='reference-register-<%= register %>'></span>
       </li>
@@ -94,7 +94,7 @@
     
     <span>Registers:</span>
     <ul>
-      <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'].each(function(register) { %>
+      <% ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'bp', 'sp'].each(function(register) { %>
       <li>
         <span class="label"><%= register.toUpperCase() %> Register:</span> <span class='record-register-<%= register %>'></span>
       </li>

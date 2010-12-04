@@ -10,7 +10,7 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
     this.instructionNumberKeys = ['segment', 'offset'];
     
     this.flagNames = ['cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of'];
-    this.registerNames = ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'sp'];
+    this.registerNames = ['ax', 'bx', 'cx', 'dx', 'di', 'si', 'cs', 'ds', 'es', 'ss', 'ip', 'bp', 'sp'];
     
     $super(container);
   },
