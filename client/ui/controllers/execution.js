@@ -127,14 +127,11 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       }) + "</ul>"
     );
     
+    var refOpsLen = reference.instruction.operands.length;
     elements.instructionOperandsElement.update(
-      "<ul>" + record.instruction.operands.inject("", function (html, op) {
-        var correctType = !!reference.instruction.operands.find(function(ref) {
-          return ref.type == op.type;
-        });
-        var correctString = !!reference.instruction.operands.find(function(ref) {
-          return ref.string == op.string;
-        });
+      "<ul>" + record.instruction.operands.inject("", function (html, op, index) {
+        var correctType = index < refOpsLen && reference.instruction.operands[index].type == op.type;
+        var correctString = index < refOpsLen && reference.instruction.operands[index].string == op.string;
         return html + "<li><span>Type:</span> <span class='" + (correctType ? "" : "record-incorrect") + "'>" + op.type + "</span><br/><span>String:</span> <span class='" + (correctString ? "" : "record-incorrect") + "'>" + op.string + "</span></li>";
       }) + "</ul>"
     );
