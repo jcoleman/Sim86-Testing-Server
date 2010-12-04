@@ -18,7 +18,6 @@ this.klass = {
             var attempt = new self.Models.ExecutionAttempt(self.request.json);
             attempt.initializeValues();
             attempt.userId = user.id();
-            console.log("got module: " + module.id() + " for attempt");
             attempt.executionModuleId = module.id();
             attempt.save(function() {
               self.render({ json: {status: "SUCCESS", attempt: {id: attempt._id}} });
