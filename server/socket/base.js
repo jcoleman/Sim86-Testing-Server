@@ -223,6 +223,23 @@ this.clientActionImplementations = {
     });
   },
   
+  'delete.attempt': function(client, message) {
+    var self = this;
+    var attemptId = message.object.attemptId;
+    this.Models.ExecutionAttempt.find({_id: attemptId}).one(function (attempt) {
+      if (attempt) {
+        self.Models.ExecutionRecord.remove({attemptId: attemptId}, function () {
+          attempt.remove(function() {
+            message.reply(true, {});
+          });
+        });
+      } else {
+        message.reply(false, {error: "Couldn't find attempt"});
+      }
+    });
+    
+  },
+  
   'delete.phase': function(client, message) {
     this.Models.ProjectPhase.find({_id: message.object.phaseId}).one(function (phase) {
       if (phase) {

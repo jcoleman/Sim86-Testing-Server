@@ -191,6 +191,10 @@ Sim.UI.Attempt.ListController = Class.create(Sim.UI.Controller, {
           Sim.Messenger.sendLocal('display.attempt', attempt);
           event.stop();
         });
+        el.select('.attempt-delete-link').first().observe('click', function (event) {
+          Sim.Messenger.sendLocal('delete.attempt', attempt);
+          event.stop();
+        })
       });
     });
   },

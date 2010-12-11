@@ -32,6 +32,18 @@ Sim.UI.StudentApplicationController = Class.create(Sim.UI.ApplicationController,
       self.attemptsList = new Sim.UI.Attempt.ListController(self.grab('.attempt-selector'), {});
     };
     
+    Sim.Messenger.receive(this, 'delete.attempt', function (message) {
+      var attempt = message.object;
+      Sim.Messenger.sendRemote('delete.attempt', {attemptId: attempt._id}, function(message) {
+        if (message.success) {
+          alert('Attempt removed successfully.')
+          resetAttemptList();
+        } else {
+          alert('Error occurred while removing attempt: ' + message.object.error);
+        }
+      });
+    });
+    
     this.grab('.refresh-attempt-list-link').observe('click', function (event) {
       resetAttemptList();
       event.stop();
@@ -57,6 +69,8 @@ Sim.UI.StudentApplicationController = Class.create(Sim.UI.ApplicationController,
     }
     
     Sim.Messenger.ignore(this, 'retrieve.attempt.current');
+    Sim.Messenger.ignore(this, 'display.attempt');
+    Sim.Messenger.ignore(this, 'delete.attempt');
   },
   
   getTemplatePath: function() {
