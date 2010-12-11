@@ -44,8 +44,10 @@ this.ExecutionAttempt = {
       this.recordCount = 0;
       this.incorrectCount = 0;
       
-      var keys = ['registers', 'flags', 'memoryChangeAddresses', 'memoryChangeValues',
-                  'operandTypes', 'operandStrings', 'instruction', 'rawBytes'];
+      var keys = ['registers', 'cf', 'pf', 'af', 'zf', 'sf', 'tf', 'if', 'df', 'of',
+                  'memoryChangeAddresses', 'memoryChangeValues',
+                  'operandTypes', 'operandStrings', 'instructionAddressingMode',
+                  'instructionSegment', 'instructionOffset', 'instructionMnemonic', 'rawBytes'];
       for (var i = 0, len = keys.length; i < len; ++i) {
         this.errorsByType[keys[i]] = 0;
       }
