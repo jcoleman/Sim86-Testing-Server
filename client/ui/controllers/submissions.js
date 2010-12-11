@@ -86,17 +86,34 @@ Sim.UI.SubmissionPhaseEditorController = Class.create(Sim.UI.Controller, {
           }*/ else if (attempt.phaseId && attempt.phaseId != self.phase._id) {
             alert('Currently displayed attempt is already submitted for a different phase');
           } else {
-            // We can go ahead an submit the attempt for this phase...
-            Sim.Messenger.sendRemote('submit.attempt.forPhase', {phaseId: self.phase._id, attemptId: attempt._id}, function(message) {
-              if (message.success) {
-                var element = self.grab('.module-' + attempt.executionModuleId);
-                self.setupSubmittedAttemptLinkage(element, attempt);
-                alert('Successfully submitted attempt for phase');
-              } else {
-                alert('Error occurred while submitting attempt for phase');
-              }
-              
+            var submitAttempt = function() {
+              // We can go ahead an submit the attempt for this phase...
+              Sim.Messenger.sendRemote('submit.attempt.forPhase', {phaseId: self.phase._id, attemptId: attempt._id}, function(message) {
+                if (message.success) {
+                  var element = self.grab('.module-' + attempt.executionModuleId);
+                  self.setupSubmittedAttemptLinkage(element, attempt);
+                  alert('Successfully submitted attempt for phase');
+                } else {
+                  alert('Error occurred while submitting attempt for phase');
+                }
+              });
+            };
+            
+            // Clean out old attempt first if necessary...
+            var oldAttempt = self.phaseSubmissionAttempts.find(function(attempt) {
+              return attempt.executionModuleId == item.executionModuleId;
             });
+            if (oldAttempt) {
+              Sim.Messenger.sendRemote('submit.attempt.forPhase', {phaseId: null, attemptId: attempt._id}, function(message) {
+                if (message.success) {
+                  submitAttempt();
+                } else {
+                  alert('Error occurred while removing prior attempt from phase');
+                }
+              });
+            } else {
+              submitAttempt();
+            }
           }
         } else {
           alert('No currently display attempt; cannot submit `null`');
@@ -127,8 +144,7 @@ Sim.UI.SubmissionPhaseEditorController = Class.create(Sim.UI.Controller, {
     );
   },
   
-  setupSubmittedAttemptLinkage: function(element, attempt) {
-    var self = this;
+  setupSubmittedAttemptLinkage: function(element, attempt) {var self = this;
     var removeSubmissionLink = element.select('.remove-submission-link').first();
     var submittedAttemptLink = element.select('.submitted-attempt-link').first();
     
