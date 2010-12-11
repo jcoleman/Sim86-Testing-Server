@@ -80,11 +80,11 @@ Sim.UI.SubmissionPhaseEditorController = Class.create(Sim.UI.Controller, {
           });
           
           if (!phaseModuleRequirement) {
-            alert("Currently display attempt's file is not required for this phase");
+            alert("Currently displayed attempt's file is not required for this phase");
           } /*else if (attempt.phaseId == self.phase._id) {
             alert('Currently displayed attempt already submitted for this phase');
           }*/ else if (attempt.phaseId && attempt.phaseId != self.phase._id) {
-            alert('Currently displayed attempted is already submitted for a different phase');
+            alert('Currently displayed attempt is already submitted for a different phase');
           } else {
             // We can go ahead an submit the attempt for this phase...
             Sim.Messenger.sendRemote('submit.attempt.forPhase', {phaseId: self.phase._id, attemptId: attempt._id}, function(message) {
