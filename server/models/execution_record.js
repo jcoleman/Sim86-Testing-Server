@@ -62,7 +62,7 @@ this.ExecutionRecord = {
   ],
   
   indexes: [
-    { executionAttemptId: 1, count: 1, correct: 1 }
+    { attemptId: 1, count: 1, correct: 1 }
   ],
   
   methods: {
