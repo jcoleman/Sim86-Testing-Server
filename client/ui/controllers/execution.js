@@ -50,6 +50,13 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       elements.flagElements[key].update(reference.computedFlags[key] ? 'ON' : 'OFF');
     });
     
+    var refBytesLen = reference.instruction.rawBytes.length;
+    elements.instructionRawBytesElement.update(
+      "<ul>" + reference.instruction.rawBytes.inject("", function (html, rawByte, index) {
+        return html + "<li><span>" + hex(rawByte) + "</span></li>";
+      }) + "</ul>"
+    );
+    
     elements.memoryChangesElement.update(
       "<ul>" + reference.memory.changes.inject("", function (html, change) {
         return html + "<li><span>Address:</span> " + hex(change.address, true) + "<br/><span>Value:</span> " + hex(change.value) + "</li>";
@@ -115,6 +122,14 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       }
     });
     
+    var refBytesLen = reference.instruction.rawBytes.length;
+    elements.instructionRawBytesElement.update(
+      "<ul>" + record.instruction.rawBytes.inject("", function (html, rawByte, index) {
+        var correct = index < refBytesLen && reference.instruction.rawBytes[index] == rawByte;
+        return html + "<li><span class='" + (correct ? "" : "record-incorrect") + "'>" + hex(rawByte) + "</span></li>";
+      }) + "</ul>"
+    );
+    
     elements.memoryChangesElement.update(
       "<ul>" + record.memory.changes.inject("", function (html, change) {
         var correctAddress = !!reference.memory.changes.find(function(ref) {
@@ -165,6 +180,8 @@ Sim.UI.Execution.DisplayController = Class.create(Sim.UI.Controller, {
       elements.memoryChangesElement = self.grab('.' + type + '-memory-changes');
       
       elements.instructionOperandsElement = self.grab('.' + type + '-instruction-operands');
+      
+      elements.instructionRawBytesElement = self.grab('.' + type + '-instruction-rawBytes');
     });
   },
   
