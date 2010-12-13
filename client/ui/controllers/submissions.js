@@ -88,6 +88,7 @@ Sim.UI.SubmissionPhaseEditorController = Class.create(Sim.UI.Controller, {
           } else {
             var submitAttempt = function() {
               // We can go ahead an submit the attempt for this phase...
+              self.phaseSubmissionAttempts.push(attempt);
               Sim.Messenger.sendRemote('submit.attempt.forPhase', {phaseId: self.phase._id, attemptId: attempt._id}, function(message) {
                 if (message.success) {
                   var element = self.grab('.module-' + attempt.executionModuleId);
@@ -100,12 +101,13 @@ Sim.UI.SubmissionPhaseEditorController = Class.create(Sim.UI.Controller, {
             };
             
             // Clean out old attempt first if necessary...
-            var oldAttempt = self.phaseSubmissionAttempts.find(function(attempt) {
-              return attempt.executionModuleId == item.executionModuleId;
+            var oldAttempt = self.phaseSubmissionAttempts.find(function(it) {
+              return it.executionModuleId == attempt.executionModuleId;
             });
             if (oldAttempt) {
-              Sim.Messenger.sendRemote('submit.attempt.forPhase', {phaseId: null, attemptId: attempt._id}, function(message) {
+              Sim.Messenger.sendRemote('submit.attempt.forPhase', {phaseId: null, attemptId: oldAttempt._id}, function(message) {
                 if (message.success) {
+                  self.phaseSubmissionAttempts = self.phaseSubmissionAttempts.without(oldAttempt);
                   submitAttempt();
                 } else {
                   alert('Error occurred while removing prior attempt from phase');
