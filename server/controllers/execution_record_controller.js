@@ -30,8 +30,15 @@ this.klass = {
             if (!operands[i] || operands[i].toString() !== '[object Object]') {
               structureErrors.push('`object.instruction.operands[' + i + ']` was either null, undefined, or not an object.');
             } else {
-              operands[i].string = operands[i].string_ || operands[i].string || "";
-              operands[i].type = operands[i].type || "";
+              operands[i].string = operands[i].string_ || operands[i].string;
+              
+              if (!operands[i].string || typeof(operands[i].string) != 'string') {
+                structureErrors.push('`object.instruction.operands[' + i + '].string` (or ._string) was not a string.');
+              }
+              
+              if (!operands[i].type || typeof(operands[i].type) != 'string') {
+                structureErrors.push('`object.instruction.operands[' + i + '].type` was not a string.');
+              }
             }
           }
         }
